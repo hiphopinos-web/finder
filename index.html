@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#00205b">
+<title>현장소통공간 · 모바일</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --navy:#00205b; --navy-700:#0a2f6e; --navy-50:#eef2fa;
+  --org:#ff9e1b; --orgv:#ff7f32; --org-50:#fff4e2;
+  --bg:#eef1f6; --card:#ffffff; --line:#e5e7eb; --line-2:#eef0f3;
+  --ink:#1b2430; --ink-700:#3a424e; --muted:#73736d; --muted-2:#9498a1;
+  --r:12px; --r-sm:9px; --r-lg:16px;
+  --top-h:54px; --sub-h:52px; --nav-h:60px;
+  --shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.06);
+  --shadow-lg:0 12px 32px rgba(16,24,40,.18);
+  font-size:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  letter-spacing:-.01em; color:var(--ink); background:var(--bg);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  overscroll-behavior-y:none;
+}
+button{font-family:inherit;letter-spacing:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+mark{background:#ffe7ab;color:inherit;border-radius:3px;padding:0 1px;font-weight:700}
+::-webkit-scrollbar{width:0;height:0}
+
+/* ===== 상단바 ===== */
+.m-top{
+  position:sticky;top:0;z-index:40;height:var(--top-h);
+  display:flex;align-items:center;justify-content:center;
+  padding:0 14px;background:var(--navy);color:#fff;
+}
+.m-brand{display:flex;align-items:center;gap:7px;font-weight:800;font-size:16px;letter-spacing:-.02em}
+.m-brand .heart{font-size:15px}
+.m-brand .sub{font-size:11px;font-weight:600;opacity:.8;letter-spacing:.02em}
+
+/* ===== 컨텍스트 서브바 ===== */
+.m-sub{position:sticky;top:var(--top-h);z-index:30;background:var(--bg);
+  border-bottom:1px solid var(--line);padding:9px 12px;min-height:var(--sub-h);
+  display:flex;align-items:center;gap:8px}
+.m-sub:empty{display:none}
+
+/* 검색 입력 */
+.m-search{display:flex;align-items:center;gap:8px;flex:1;background:var(--card);
+  border:1px solid var(--line);border-radius:999px;padding:0 8px 0 14px;height:42px;
+  box-shadow:var(--shadow)}
+.m-search:focus-within{border-color:var(--navy);box-shadow:0 0 0 3px var(--navy-50)}
+.m-search svg{width:18px;height:18px;color:var(--muted);flex-shrink:0}
+.m-search input{flex:1;border:0;outline:0;background:transparent;font-size:15px;
+  color:var(--ink);min-width:0;height:100%}
+.m-search input::placeholder{color:var(--muted-2)}
+.m-search-clear{width:30px;height:30px;border:0;background:transparent;color:var(--muted);
+  display:none;align-items:center;justify-content:center;flex-shrink:0}
+.m-search-clear svg{width:14px;height:14px}
+.m-search.has-val .m-search-clear{display:flex}
+
+/* 세그먼트 토글 */
+.m-seg{display:flex;background:#e3e7ee;border-radius:999px;padding:3px;gap:2px;flex:1}
+.m-seg button{flex:1;border:0;background:transparent;border-radius:999px;padding:8px 4px;
+  font-size:13.5px;font-weight:700;color:var(--muted)}
+.m-seg button.on{background:var(--navy);color:#fff;box-shadow:var(--shadow)}
+
+/* 카테고리 선택 셀렉터 (검색창과 구분되도록 라벨칩 + 아래 화살표) */
+.m-filter{display:flex;align-items:center;gap:8px;background:var(--card);min-width:0;
+  border:1px solid var(--line);border-radius:10px;padding:0 10px 0 9px;height:42px;
+  box-shadow:var(--shadow);white-space:nowrap;max-width:64%}
+.m-filter .fl-cat{flex-shrink:0;font-size:11px;font-weight:800;color:#fff;background:var(--navy);
+  padding:4px 9px;border-radius:7px;letter-spacing:-.01em}
+.m-filter .fl-txt{flex:1;min-width:0;font-size:13.5px;font-weight:700;color:var(--ink);text-align:left;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.m-filter .fl-caret{width:16px;height:16px;flex-shrink:0;color:var(--muted)}
+.m-filter:active{background:var(--bg)}
+.m-filter.flex1{flex:1;max-width:none}
+.m-filter.noshrink{flex-shrink:0;max-width:55%}
+
+/* ===== 본문 ===== */
+.m-main{padding:12px 12px calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px);
+  min-height:60vh}
+.m-stat{font-size:12px;color:var(--muted);font-weight:600;padding:2px 2px 10px}
+.m-stat b{color:var(--navy);font-weight:800}
+
+/* 접이식 섹션 */
+.map-section{margin-bottom:12px}
+.map-section-head{width:100%;display:flex;align-items:center;gap:8px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:11px 13px;text-align:left}
+.map-section.open .map-section-head{border-bottom-left-radius:0;border-bottom-right-radius:0;
+  border-bottom-color:var(--line-2)}
+.map-section-arrow{display:flex;color:var(--muted);transition:transform .2s}
+.map-section-arrow svg{width:15px;height:15px}
+.map-section:not(.open) .map-section-arrow{transform:rotate(-90deg)}
+.map-section-title{flex:1;font-size:14.5px;font-weight:800;color:var(--navy);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.map-section-count{font-size:11.5px;font-weight:700;color:var(--org);
+  background:var(--org-50);padding:3px 9px;border-radius:999px}
+.map-section-body{display:block;border:1px solid var(--line);border-top:0;
+  border-bottom-left-radius:var(--r);border-bottom-right-radius:var(--r);
+  padding:10px;background:#f7f8fb}
+.map-section:not(.open) .map-section-body{display:none}
+.prod-note{font-size:12px;color:var(--muted);padding:8px 11px;font-weight:600;background:var(--navy-50);
+  border:1px solid #dbe4f4;border-radius:9px;margin-bottom:11px;line-height:1.5}
+
+/* 단일 카테고리 결과(상품별·단일 업무) — 접이식 없이 깔끔한 제목 헤더 */
+.solo-sec{margin-bottom:12px}
+.solo-head{display:flex;align-items:center;gap:9px;padding:0 2px 12px;
+  border-bottom:1px solid var(--line);margin-bottom:13px}
+.solo-title{font-size:16.5px;font-weight:800;color:var(--navy);letter-spacing:-.02em}
+.solo-cnt{font-size:11.5px;font-weight:700;color:var(--org);background:var(--org-50);padding:3px 10px;border-radius:999px}
+
+.person-grid,.bs-grid{display:flex;flex-direction:column;gap:9px}
+
+/* ===== 담당자 카드 ===== */
+.person-card{position:relative;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r);padding:13px 13px 12px;box-shadow:var(--shadow)}
+.person-card.card-flash{animation:cardFlash 1.6s ease}
+@keyframes cardFlash{0%,100%{box-shadow:var(--shadow)}
+  15%{box-shadow:0 0 0 3px var(--org)}55%{box-shadow:0 0 0 3px rgba(255,158,27,.35)}}
+.pc-fav{position:absolute;top:7px;right:7px;width:38px;height:38px;border:0;
+  background:transparent;color:#cdd2da;display:flex;align-items:center;justify-content:center;
+  border-radius:9px}
+.pc-fav svg{width:20px;height:20px}
+.pc-fav.on{color:var(--org)}
+.pc-fav.on svg{fill:var(--org)}
+.person-card-head{position:relative;display:flex;gap:11px;align-items:center;padding-right:34px}
+.person-card.has-fn .person-card-head{padding-right:128px}
+.person-avatar{width:44px;height:44px;border-radius:11px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;
+  background:var(--navy-50);color:var(--navy)}
+.person-info-block{flex:1;min-width:0}
+.person-primary-row{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.person-name-row{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 7px}
+.person-name-main{font-size:16.5px;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+.person-id-inline{font-size:12.5px;color:var(--muted);font-weight:600;line-height:1.4}
+.person-meta-inline{font-size:12.5px;color:var(--muted);font-weight:600;line-height:1.4;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+/* 업무분류 알약 — 카드 우측 세로 중앙, 즐겨찾기 별 왼쪽, 최대 2줄 */
+.pc-fn{position:absolute;top:50%;right:46px;transform:translateY(-50%);max-width:76px;z-index:3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  white-space:normal;overflow-wrap:anywhere;word-break:keep-all;text-align:center;line-height:1.2;
+  border:1px solid #ffd89a;background:var(--org-50);color:#a85d00;font-size:11px;font-weight:800;
+  padding:4px 9px;border-radius:14px}
+.pc-fn mark{background:var(--highlight,#ffe7ab);color:inherit;padding:0}
+.person-work{margin-top:11px}
+.person-work-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.person-work-list li{position:relative;padding-left:15px;font-size:13.5px;line-height:1.5;color:var(--ink-700)}
+.person-work-list li::before{content:"";position:absolute;left:3px;top:9px;width:4px;height:4px;
+  border-radius:50%;background:var(--org)}
+.person-work-list li.work-sub-li{padding-left:26px;color:var(--muted);font-size:12.5px}
+.person-work-list li.work-sub-li::before{content:"└";left:13px;top:0;width:auto;height:auto;
+  background:transparent;color:#b9bec7;font-size:11px}
+.person-alt{margin-top:11px;background:var(--navy-50);border:1px solid #dde6f5;border-radius:var(--r-sm);
+  padding:8px 11px;display:flex;gap:9px;align-items:flex-start}
+.person-alt-label{flex-shrink:0;font-size:10.5px;font-weight:800;color:#fff;background:var(--navy);
+  padding:3px 8px;border-radius:999px;margin-top:1px}
+.person-alt-body{flex:1;font-size:12.5px;color:var(--ink-700);line-height:1.55}
+.alt-line{display:block}
+.person-alt-jump{border:0;background:transparent;color:var(--navy);font-weight:800;
+  font-size:12.5px;padding:0;text-decoration:underline;text-underline-offset:2px}
+.alt-name-plain{font-weight:700}
+.alt-ctx{color:var(--muted)}
+
+/* 연락처(접이식 — 기본 접힘, v 누르면 펼침) */
+.mc{margin-top:11px}
+.mc-toggle{width:100%;display:flex;align-items:center;gap:7px;background:var(--bg);
+  border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:12.5px;font-weight:700;color:var(--ink-700)}
+.mc-toggle>svg:first-child{width:14px;height:14px;color:var(--muted);flex-shrink:0}
+.mc-toggle>span{flex:1;text-align:left}
+.mc-toggle .mc-tg-ic{width:15px;height:15px;color:var(--muted);transition:transform .2s}
+.mc.open .mc-toggle{background:var(--navy-50);color:var(--navy);border-color:#dbe4f4;
+  border-bottom-left-radius:0;border-bottom-right-radius:0}
+.mc.open .mc-toggle .mc-tg-ic{transform:rotate(180deg)}
+.mc-body{display:none;border:1px solid #dbe4f4;border-top:0;border-radius:0 0 9px 9px;padding:2px 12px}
+.mc.open .mc-body{display:block}
+.mc-row{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid var(--line-2)}
+.mc-row:last-child{border-bottom:0}
+.mc-lbl{font-size:11.5px;color:var(--muted-2);font-weight:700;width:30px;flex-shrink:0}
+.mc-val{flex:1;min-width:0;font-size:13.5px;color:var(--ink);font-weight:600;
+  font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* 행 액션 버튼(전화걸기/메일보내기) — 같은 폭으로 통일, 글자 짤림은 값 쪽에서만 */
+.mc-actbtn{display:inline-flex;align-items:center;justify-content:center;gap:5px;flex-shrink:0;
+  min-width:98px;height:34px;padding:0 12px;background:var(--navy);color:#fff;border-radius:8px;
+  font-size:12.5px;font-weight:800;letter-spacing:-.01em}
+.mc-actbtn svg{width:13px;height:13px}
+.mc-callbtn{display:inline-flex;align-items:center;justify-content:center;gap:5px;background:var(--navy);
+  color:#fff;border-radius:8px;padding:8px 13px;font-size:12.5px;font-weight:800;flex-shrink:0}
+.mc-callbtn svg{width:13px;height:13px}
+.mc-callbtn-full{display:flex;width:100%;height:40px}
+
+/* ===== 보상서포터즈 카드 ===== */
+.bs-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:12px 13px;box-shadow:var(--shadow)}
+.bs-card-cat{display:inline-block;font-size:11px;font-weight:800;color:var(--navy);
+  background:var(--navy-50);padding:3px 9px;border-radius:999px;margin-bottom:8px}
+.bs-card-name{font-size:15.5px;font-weight:800;color:var(--ink)}
+.bs-card-pos{font-size:12px;font-weight:600;color:var(--muted)}
+.bs-card-dept{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:2px}
+.bs-card-contact{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);
+  display:flex;flex-direction:column;gap:1px}
+
+/* ===== 빈 상태 ===== */
+.empty{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty-ic{width:52px;height:52px;margin:0 auto 14px;border-radius:50%;background:var(--card);
+  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:#c4c9d2}
+.empty-ic svg{width:24px;height:24px}
+.empty-title{font-size:15px;font-weight:800;color:var(--ink-700)}
+.empty-hint{font-size:12.5px;margin-top:6px}
+.empty-hint b{color:var(--navy)}
+
+/* ===== 검색 홈(유휴) ===== */
+.q-hero{text-align:center;padding:26px 8px 18px}
+.q-hero-mark{font-size:24px;font-weight:900;color:var(--navy);letter-spacing:-.03em}
+.q-hero-mark .o{color:var(--org)}
+.q-hero-sub{font-size:13px;color:var(--muted);font-weight:600;margin-top:9px;line-height:1.5}
+.q-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;justify-content:center}
+.q-chip{border:1px solid var(--line);background:var(--card);color:var(--ink-700);
+  border-radius:999px;padding:9px 15px;font-size:13px;font-weight:700;box-shadow:var(--shadow)}
+.q-chip .x{color:var(--muted-2);margin-left:5px;font-weight:800}
+.q-sec-label{font-size:11.5px;font-weight:800;color:var(--muted-2);letter-spacing:.03em;
+  margin:24px 4px 11px;display:flex;align-items:center;gap:7px}
+.q-sec-label .ln{flex:1;height:1px;background:var(--line)}
+.q-sec-cnt{color:var(--org);background:var(--org-50);padding:2px 8px;border-radius:999px}
+
+/* 알림 배너 */
+.m-notice{display:flex;gap:9px;background:var(--navy-50);border:1px solid #dbe4f4;
+  border-radius:var(--r);padding:11px 12px;margin-bottom:13px}
+.m-notice svg{width:17px;height:17px;color:var(--navy);flex-shrink:0;margin-top:1px}
+.m-notice-txt{font-size:12px;color:var(--ink-700);line-height:1.55}
+.m-notice-txt b{color:var(--navy);font-weight:800}
+
+/* ===== 현장소통담당 보드 ===== */
+.fc-cat{margin-bottom:14px}
+.fc-cat-head{display:flex;align-items:center;gap:8px;padding:0 2px 9px}
+.fc-cat-head .ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;
+  justify-content:center;color:var(--navy)}
+.fc-cat-head .ic svg{width:17px;height:17px}
+.fc-cat-title{font-size:15px;font-weight:800;color:var(--navy)}
+.fc-cat-cnt{font-size:11px;font-weight:700;color:var(--org);background:var(--org-50);
+  padding:2px 8px;border-radius:999px}
+.fc-mem{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r);padding:11px 13px;box-shadow:var(--shadow);margin-bottom:8px}
+.fc-mem.link{cursor:pointer}
+.fc-mem.link:active{background:var(--navy-50)}
+.fc-av{width:40px;height:40px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;
+  justify-content:center;font-size:13px;font-weight:800;color:var(--navy)}
+.fc-mem-meta{flex:1;min-width:0}
+.fc-mem-name{font-size:15px;font-weight:800;color:var(--ink)}
+.fc-mem-name .rk{font-size:12px;font-weight:600;color:var(--muted);margin-left:5px}
+.fc-mem-dept{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:1px}
+.fc-mem-go{flex-shrink:0;color:var(--muted-2)}
+.fc-mem-go svg{width:17px;height:17px}
+
+/* ===== 하단 네비 ===== */
+.m-nav{position:fixed;left:0;right:0;bottom:0;z-index:50;height:calc(var(--nav-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);background:var(--card);border-top:1px solid var(--line);
+  display:flex;box-shadow:0 -2px 12px rgba(16,24,40,.06)}
+.m-nav button{flex:1;border:0;background:transparent;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;color:var(--muted-2);font-size:10.5px;font-weight:700;
+  position:relative;padding-top:6px}
+.m-nav button svg{width:22px;height:22px;stroke-width:2}
+.m-nav button.on{color:var(--navy)}
+.m-nav button.on .ni{color:var(--org)}
+.m-nav .ni{display:flex;color:var(--muted-2)}
+.m-nav .nav-badge{position:absolute;top:5px;left:calc(50% + 6px);min-width:16px;height:16px;
+  padding:0 4px;border-radius:999px;background:var(--orgv);color:#fff;font-size:9.5px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;line-height:1}
+
+/* ===== 드로어(필터) ===== */
+.m-scrim{position:fixed;inset:0;z-index:60;background:rgba(16,24,40,.45);opacity:0;
+  visibility:hidden;transition:opacity .25s}
+.m-scrim.show{opacity:1;visibility:visible}
+.m-drawer{position:fixed;top:0;bottom:0;left:0;z-index:61;width:84%;max-width:340px;
+  background:var(--bg);transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.m-drawer.show{transform:translateX(0)}
+.m-drawer-head{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;
+  background:var(--navy);color:#fff;flex-shrink:0}
+.m-drawer-title{font-size:15px;font-weight:800}
+.m-drawer-close{width:34px;height:34px;border:0;background:rgba(255,255,255,.15);border-radius:9px;
+  color:#fff;display:flex;align-items:center;justify-content:center}
+.m-drawer-close svg{width:16px;height:16px}
+.m-drawer-body{flex:1;overflow-y:auto;padding:10px 12px calc(env(safe-area-inset-bottom) + 16px)}
+.d-cap{font-size:11px;font-weight:800;color:var(--muted-2);letter-spacing:.03em;padding:10px 6px 7px;
+  display:flex;justify-content:space-between}
+.d-item{width:100%;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:12px 13px;margin-bottom:6px;text-align:left;font-size:14px;font-weight:700;color:var(--ink-700)}
+.d-item.on{border-color:var(--navy);background:var(--navy-50);color:var(--navy)}
+.d-item .d-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.d-item .d-cnt{font-size:11.5px;font-weight:700;color:var(--muted-2);background:var(--bg);
+  padding:2px 8px;border-radius:999px}
+.d-item.on .d-cnt{color:var(--navy);background:#fff}
+.d-pin{width:32px;height:32px;border-radius:8px;border:0;background:transparent;color:#cdd2da;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.d-pin svg{width:15px;height:15px}
+.d-pin.on{color:var(--org)}.d-pin.on svg{fill:var(--org)}
+.d-grp{margin-bottom:6px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+.d-grp-hd{width:100%;display:flex;align-items:center;gap:8px;background:transparent;border:0;
+  padding:13px 13px;text-align:left;font-size:14.5px;font-weight:800;color:var(--navy)}
+.d-grp-hd .arr{color:var(--muted);transition:transform .2s}.d-grp-hd .arr svg{width:14px;height:14px}
+.d-grp.open .d-grp-hd{background:var(--navy-50)}
+.d-grp.open .d-grp-hd .arr{transform:rotate(90deg);color:var(--navy)}
+.d-grp-hd .d-grp-cnt{margin-left:auto;font-size:11px;font-weight:700;color:var(--muted-2);
+  background:var(--bg);padding:2px 8px;border-radius:999px}
+.d-grp.open .d-grp-hd .d-grp-cnt{color:var(--navy);background:#fff}
+.d-grp-body{max-height:0;overflow:hidden;transition:max-height .26s ease;background:#e9edf4}
+/* 자식 항목: 펼친 부모 강조 + 인셋 배경 + 카드 내포로 소속 표현(트리 연결선 없이) */
+.d-grp-inner{padding:9px 9px 11px}
+.d-grp-inner .d-item{background:#fff;margin-bottom:6px;font-size:13.5px;font-weight:600}
+.d-grp-inner .d-item:last-child{margin-bottom:0}
+.d-grp-inner .d-item.on{background:var(--navy-50);font-weight:800}
+.d-sec{font-size:11px;font-weight:800;color:var(--org);display:flex;align-items:center;gap:5px;padding:12px 6px 6px}
+.d-sec svg{width:13px;height:13px}
+.d-divider{height:1px;background:var(--line);margin:8px 4px}
+.d-item.rgn-flash{animation:rgnFlash .8s ease}
+@keyframes rgnFlash{0%,100%{background:var(--card)}40%{background:var(--org-50)}}
+
+/* ===== 더보기 시트 ===== */
+.m-sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;background:var(--card);
+  border-radius:18px 18px 0 0;transform:translateY(110%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  padding:8px 14px calc(env(safe-area-inset-bottom) + 18px);box-shadow:var(--shadow-lg)}
+.m-sheet.show{transform:translateY(0)}
+.m-sheet-grab{width:38px;height:4px;border-radius:999px;background:var(--line);margin:8px auto 12px}
+.m-sheet-title{font-size:12px;font-weight:800;color:var(--muted-2);padding:0 4px 10px;letter-spacing:.02em}
+.sheet-item{width:100%;display:flex;align-items:center;gap:13px;background:transparent;border:0;
+  border-bottom:1px solid var(--line-2);padding:15px 6px;text-align:left}
+.sheet-item:last-child{border-bottom:0}
+.sheet-item .si-ic{width:40px;height:40px;border-radius:11px;background:var(--navy-50);color:var(--navy);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sheet-item .si-ic svg{width:20px;height:20px}
+.sheet-item.on .si-ic{background:var(--navy);color:#fff}
+.sheet-item .si-tx{flex:1}
+.sheet-item .si-name{font-size:15px;font-weight:800;color:var(--ink)}
+.sheet-item .si-desc{font-size:12px;color:var(--muted);font-weight:600;margin-top:2px}
+.sheet-item .si-go{color:var(--muted-2)}.sheet-item .si-go svg{width:18px;height:18px}
+
+/* ===== 좌측 당김 핸들(목록 드로어 열기) — 하단 네비 바로 위(엄지 영역), 상단 콘텐츠 안 가림 ===== */
+.m-edge{position:fixed;left:0;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 22px);z-index:38;
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  width:30px;height:104px;background:var(--navy);color:#fff;border:0;padding:0;
+  border-radius:0 15px 15px 0;box-shadow:3px 3px 12px rgba(0,32,91,.32);
+  animation:edgeNudge 2.4s ease-in-out 1s 2}
+.m-edge.show{display:flex}
+.m-edge .me-label{writing-mode:vertical-rl;text-orientation:upright;font-size:11.5px;font-weight:800;letter-spacing:.04em}
+.m-edge .me-chev{width:15px;height:15px}
+.m-edge:active{background:var(--navy-700)}
+@keyframes edgeNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+
+/* ===== 토스트 ===== */
+.m-toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px);
+  transform:translateX(-50%) translateY(10px);z-index:80;background:var(--ink);color:#fff;
+  font-size:13px;font-weight:700;padding:11px 18px;border-radius:999px;box-shadow:var(--shadow-lg);
+  opacity:0;visibility:hidden;transition:opacity .2s,transform .2s;white-space:nowrap}
+.m-toast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="m-top">
+  <div class="m-brand"><span class="heart">💕</span><span>현장소통공간</span><span class="sub">app</span></div>
+</header>
+
+<div class="m-sub" id="m-sub"></div>
+<main class="m-main" id="m-content"></main>
+
+<button class="m-edge" id="m-edge" aria-label="목록 열기"><span class="me-label">보기</span><svg class="me-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+
+<nav class="m-nav" id="m-nav"></nav>
+
+<div class="m-scrim" id="m-scrim"></div>
+<aside class="m-drawer" id="m-drawer">
+  <div class="m-drawer-head"><span class="m-drawer-title" id="m-drawer-title">보기</span>
+    <button class="m-drawer-close" id="m-drawer-close" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+  <div class="m-drawer-body" id="m-drawer-body"></div>
+</aside>
+
+<div class="m-sheet" id="m-sheet">
+  <div class="m-sheet-grab"></div>
+  <div class="m-sheet-title">더 보기</div>
+  <div id="m-sheet-body"></div>
+</div>
+
+<div class="m-toast" id="m-toast"></div>
+
+<script>
+// ===== 공통 유틸 =====
+const CHO = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
+function toChosung(text) {
+  let out = "";
+  for (const c of String(text || "")) {
+    const cp = c.charCodeAt(0);
+    if (cp >= 0xAC00 && cp <= 0xD7A3) out += CHO[Math.floor((cp - 0xAC00) / 588)];
+    else if (c === " ") out += " ";
+    else out += c.toLowerCase();
+  }
+  return out;
+}
+
+// 참조 지식(지식맵·Q&A·용어사전)의 담당자·작성자 — 인사이동 가능성 안내
+const STALE_NOTE = `<span class="ref-stale"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>작성 시점 기준이므로 현재와 다를 수 있습니다. 참고용으로 활용하세요.</span>`;
+
+// 검색 유사어 — 현장 총무 업무 맥락에 맞춰 확장
+// 키와 값 어느 쪽으로 검색해도 그룹 내 모든 단어로 매칭됨 (양방향)
+const SYNONYMS = {
+  // 보험 계약 라이프사이클
+  "청약":   ["가입", "신계약"],
+  "변경":   ["계약변경", "정정"],
+  "갱신":   ["자동갱신", "재계약"],
+  "해지":   ["해약", "중도해지"],
+  "취소":   ["철회", "취소철회"],
+  "부활":   ["복원"],
+  // 수납/입금
+  "납입":   ["보험료", "수납"],
+  "이체":   ["자동이체", "CMS"],
+  "환불":   ["환급", "반환"],
+  "입금":   ["납부", "수납"],
+  // 보험금/사고
+  "사고":   ["사고접수", "보상", "보험금청구"],
+  "보험금": ["지급", "수익자"],
+  "구상":   ["구상권", "환수"],
+  // 상품/담보
+  "실손":   ["실비", "실손의료비"],
+  "담보":   ["보장", "특약"],
+  "면책":   ["면책기간", "면책사유"],
+  "할인":   ["할인할증"],
+  // 자동차
+  "자동차": ["자보", "차보험"],
+  "대물":   ["대물배상"],
+  "대인":   ["대인배상"],
+  "자차":   ["자기차량손해"],
+  // 일반/장기 구분
+  "장기":   ["장기보험"],
+  "일반":   ["일반보험"],
+  "단체":   ["단체보험"],
+  // 심사/인수
+  "인수":   ["언더라이팅", "UW"],
+  "심사":   ["언더라이팅"],
+  "고지":   ["고지의무", "알릴의무"],
+  // 문서/업무
+  "공문":   ["접수공문"],
+  "결재":   ["전결", "전결규정"],
+  "보고서": ["리포트"],
+  "지침":   ["가이드", "매뉴얼", "가이드라인"],
+  "규정":   ["내규"],
+  // 시스템/도구
+  "지식센터": ["하이미", "Himi", "KMS"],
+  "전산":   ["시스템"],
+};
+const SYN_MAP = (() => {
+  const m = new Map();
+  for (const [k, vs] of Object.entries(SYNONYMS)) {
+    const g = [k, ...vs].map(s => s.toLowerCase());
+    for (const w of g) {
+      if (!m.has(w)) m.set(w, new Set());
+      g.forEach(x => m.get(w).add(x));
+    }
+  }
+  return m;
+})();
+
+function expandTerm(t) {
+  const l = t.toLowerCase();
+  return SYN_MAP.has(l) ? [...SYN_MAP.get(l)] : [l];
+}
+
+// 0건 시 역방향 제안 — 입력 단어와 유사한 다른 단어 추천
+// 예: "차보험" 검색 → 결과 0건 → ["자동차", "자보"] 제안
+function suggestAlternatives(query) {
+  if (!query) return [];
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const sugg = new Set();
+  for (const w of words) {
+    if (SYN_MAP.has(w)) {
+      SYN_MAP.get(w).forEach(s => { if (s !== w) sugg.add(s); });
+    }
+  }
+  return [...sugg].slice(0, 5);
+}
+
+// 통합 점수 — 텍스트 매칭 + 메타 가산점(조회수·최신성)
+// opts: { views?:number, date?:string('YYYY-MM-DD') }
+function searchScore(haystack, q, opts) {
+  let s = 0;
+  for (const term of q) {
+    if (!term) continue;
+    if (haystack.startsWith(term)) s += 5;
+    else if (haystack.indexOf(" " + term) !== -1) s += 3;
+    else if (haystack.indexOf(term) !== -1) s += 1;
+  }
+  if (opts) {
+    // 조회수 가산점: log10 스케일 (1만회 = +4점, 1천회 = +3점)
+    if (opts.views && opts.views > 0) s += Math.min(5, Math.log10(opts.views + 1));
+    // 최신성 가산점: 1년 이내 +2, 2년 이내 +1
+    if (opts.date) {
+      const y = parseInt(opts.date.slice(0, 4), 10);
+      const m = parseInt(opts.date.slice(5, 7) || "1", 10);
+      if (y > 0) {
+        const ageY = (new Date().getFullYear() - y) + (new Date().getMonth() + 1 - m) / 12;
+        if (ageY <= 1) s += 2;
+        else if (ageY <= 2) s += 1;
+      }
+    }
+  }
+  return s;
+}
+
+// 검색 옵션 — localStorage 기반, 사용자가 끄고 켤 수 있는 동작 토글
+// 통합검색 페이지의 ⚙ 검색 옵션 버튼에서 변경
+const SEARCH_OPTS_KEY = "chongmu_search_opts_v1";
+const SEARCH_OPTS_DEFAULT = {
+  synonyms:    true,  // 유사어 자동 확장
+  chosung:     true,  // 자모만 입력 시 초성 검색
+  recentBoost: true,  // 최신 자료 가산점
+  popularBoost: true, // 조회수 가산점
+  scope: {            // 검색 카테고리 범위
+    files:    true,
+    people:   true,
+    faq:      true,
+    glossary: true,
+    docs:     true,
+  },
+};
+const searchOptions = {
+  _cache: null,
+  get() {
+    if (this._cache) return this._cache;
+    try {
+      const raw = localStorage.getItem(SEARCH_OPTS_KEY);
+      const saved = raw ? JSON.parse(raw) : {};
+      this._cache = {
+        ...SEARCH_OPTS_DEFAULT,
+        ...saved,
+        scope: { ...SEARCH_OPTS_DEFAULT.scope, ...(saved.scope || {}) },
+      };
+    } catch (e) { this._cache = { ...SEARCH_OPTS_DEFAULT, scope: { ...SEARCH_OPTS_DEFAULT.scope } }; }
+    return this._cache;
+  },
+  set(patch) {
+    const next = { ...this.get(), ...patch };
+    if (patch.scope) next.scope = { ...this.get().scope, ...patch.scope };
+    this._cache = next;
+    try { localStorage.setItem(SEARCH_OPTS_KEY, JSON.stringify(next)); } catch (e) {}
+  },
+  reset() {
+    this._cache = null;
+    try { localStorage.removeItem(SEARCH_OPTS_KEY); } catch (e) {}
+  },
+  isDefault() {
+    const cur = this.get();
+    const dflt = SEARCH_OPTS_DEFAULT;
+    return cur.synonyms === dflt.synonyms && cur.chosung === dflt.chosung &&
+           cur.recentBoost === dflt.recentBoost && cur.popularBoost === dflt.popularBoost &&
+           Object.keys(dflt.scope).every(k => cur.scope[k] === dflt.scope[k]);
+  },
+};
+
+// 검색어 히스토리 — localStorage 기반, 최근 6개
+const SEARCH_HISTORY_KEY = "chongmu_search_history_v1";
+const SEARCH_HISTORY_MAX = 6;
+const searchHistory = {
+  get() {
+    try {
+      const raw = localStorage.getItem(SEARCH_HISTORY_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  },
+  add(q) {
+    const norm = (q || "").trim();
+    if (!norm || norm.length < 2) return;
+    let list = this.get().filter(x => x !== norm);
+    list.unshift(norm);
+    if (list.length > SEARCH_HISTORY_MAX) list = list.slice(0, SEARCH_HISTORY_MAX);
+    try { localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(list)); } catch (e) {}
+  },
+  remove(q) {
+    const list = this.get().filter(x => x !== q);
+    try { localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(list)); } catch (e) {}
+  },
+  clear() {
+    try { localStorage.removeItem(SEARCH_HISTORY_KEY); } catch (e) {}
+  },
+};
+
+function isChosungQuery(q) {
+  // 자모 1개만 있을 때는 초성 검색 안 함 (결과가 너무 광범위해짐)
+  if (q.replace(/\s/g, "").length < 2) return false;
+  return q.length > 0 && /^[\u3131-\u314Ea-z0-9\s]+$/i.test(q) && /[\u3131-\u314E]/.test(q);
+}
+
+// IME 조합 + 디바운스를 묶은 통합 input 헬퍼
+function setupSearchInput(input, clearBtn, onChange, opts) {
+  opts = opts || {};
+  const delay = opts.delay || 180;
+  let composing = false;
+  let timer = null;
+
+  function trigger() {
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+      if (composing) return;
+      onChange();
+    }, delay);
+  }
+
+  input.addEventListener("compositionstart", function() {
+    composing = true;
+    clearTimeout(timer);
+  });
+  input.addEventListener("compositionend", function() {
+    composing = false;
+    trigger();
+  });
+  input.addEventListener("input", function() {
+    if (composing) return;
+    trigger();
+  });
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", function() {
+      input.value = "";
+      input.focus();
+      clearTimeout(timer);
+      onChange();
+    });
+  }
+}
+
+function parseQuery(q) {
+  const isCho = isChosungQuery(q);
+  const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+  const expanded = terms.map(t => isCho ? [t] : [...new Set(expandTerm(t))]);
+  return { terms, expanded, isChosung: isCho };
+}
+
+function matches(haystack, expanded) {
+  if (expanded.length === 0) return true;
+  if (!haystack) return false;
+  return expanded.every(g => g.some(t => haystack.indexOf(t) !== -1));
+}
+
+// 검색 결과 클릭 후 대상 요소 노란색 플래시 (qa-hl 애니메이션 재사용)
+window.__flashEl = function(el) {
+  if (!el) return;
+  el.classList.remove('qa-hl');
+  void el.offsetWidth;
+  el.classList.add('qa-hl');
+  setTimeout(function() { el.classList.remove('qa-hl'); }, 2600);
+};
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c]);
+}
+function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+
+function highlight(text, terms) {
+  const esc = escapeHtml(text);
+  if (!terms || terms.length === 0) return esc;
+  const all = [];
+  terms.forEach(g => g.forEach(t => all.push(t)));
+  if (all.length === 0) return esc;
+  all.sort((a, b) => b.length - a.length);
+  try {
+    const re = new RegExp("(" + all.map(escapeRegex).join("|") + ")", "gi");
+    return esc.replace(re, "<mark>$1</mark>");
+  } catch (e) { return esc; }
+}
+
+function initials(name) {
+  const s = (name || "").trim();
+  if (!s) return "";
+  return s.length <= 2 ? s : s.slice(0, 2);
+}
+
+// IME (한글 입력 조합) 추적 — 글로벌
+let __composing = false;
+document.addEventListener("compositionstart", (e) => {
+  if (e.target && e.target.matches && e.target.matches('input[type="search"]')) {
+    __composing = true;
+  }
+}, true);
+document.addEventListener("compositionend", (e) => {
+  if (e.target && e.target.matches && e.target.matches('input[type="search"]')) {
+    __composing = false;
+    // 조합 완료 시점에 검색 한 번 실행
+    e.target.dispatchEvent(new Event("input"));
+  }
+}, true);
+
+// 디바운스 — IME 조합 중에는 실행 안 함
+function debounce(fn, ms) {
+  let t;
+  return function(...args) {
+    clearTimeout(t);
+    if (__composing) return;
+    t = setTimeout(() => fn.apply(this, args), ms);
+  };
+}
+
+// 검색어 정규화 — 1글자 자음 단독은 검색하지 않음 (노이즈 차단)
+function normalizeQuery(s) {
+  s = (s || "").trim();
+  if (s.length === 1 && /^[\u3131-\u314E]$/.test(s)) return "";
+  return s;
+}
+
+// ===== 데이터 =====
+const DATA = { people: [{"tel": "02-3701-3510", "n": "권병래", "area": "인수/심사", "p": "수석", "d": "장기전략파트", "sd": "", "u": "인수정책", "w": " - 인수정책 분야 멘토\n - 공통지침(부) / 간편상품군 / 암보험(부)\n - ICPS / ICIS 운영 / 고객관리 총괄(인수주의 고객)\n - 복합누적(간편)(부)", "a": "오창호", "empNo": "308675", "grp": "장기보험", "fax": "0507-770-3132", "email": "kbrgood@hi.co.kr"}, {"tel": "02-3701-3496", "n": "오창호", "area": "인수/심사", "p": "차장", "d": "장기전략파트", "sd": "", "u": "인수정책", "w": " - 간편상품군 / 암보험(정)\n - 복합누적(간편)(정)", "a": "권병래", "empNo": "309502", "grp": "장기보험", "fax": "0507-770-3545", "email": "oh37@hi.co.kr"}, {"tel": "02-3701-3511", "n": "유형석", "area": "인수/심사", "p": "과장", "d": "장기전략파트", "sd": "", "u": "인수정책", "w": " - TM / CM 상품군 / 치아보험\n - 직업별 인수지침\n - 복합누적(종합)(부)\n - 실손 정책", "a": "조옥분", "empNo": "312344", "grp": "장기보험", "fax": "0507-739-7005", "email": "kakaroo91@hi.co.kr"}, {"tel": "02-3701-8395", "n": "윤가영", "area": "인수/심사", "p": "과장", "d": "장기전략파트", "sd": "", "u": "인수정책", "w": " - 퍼펙트 / 단체 / 재물군\n - 공통지침(정)\n - 플래너 관리 총괄 / 정액담보 정책 총괄\n - 복합누적(종합)(정) / 계약건전성(재물적부)", "a": "강은진", "empNo": "312345", "grp": "장기보험", "fax": "0507-739-7006", "email": "rkdud516@hi.co.kr"}, {"tel": "02-3701-3490", "n": "조옥분", "area": "인수/심사", "p": "대리", "d": "장기전략파트", "sd": "", "u": "인수정책", "w": " - 실손 / 운전자 / 방카 / 펫보험 / 골든타임\n - 계약건전성(취소 철회) \n - 복합누적(운전자)", "a": "유형석", "empNo": "305414", "grp": "장기보험", "fax": "0507-770-1820", "email": "bunny@hi.co.kr"}, {"tel": "02-3701-3497", "n": "강은진", "area": "인수/심사", "p": "대리", "d": "장기전략파트", "sd": "", "u": "인수정책", "w": " - 어린이상품군 / 간병 / 저축(연금)\n - 제안마당 / 공문수신\n - 복합누적(어린이)", "a": "윤가영", "empNo": "307534", "grp": "장기보험", "fax": "0507-770-2614", "email": "demi80@hi.co.kr"}, {"tel": "02-3701-3495", "n": "최보람", "area": "인수/심사", "p": "책임의료전담", "d": "장기전략파트", "sd": "", "u": "인수정책", "w": " - 메디컬 관련(2Q패스 등)\n - 게약건전성(콜적부)", "a": "조옥분", "empNo": "311022", "grp": "장기보험", "fax": "0507-770-0039", "email": "boram@hi.co.kr"}, {"tel": "02-3701-8397", "n": "권미정", "area": "기획·분석", "p": "과장", "d": "장기전략파트", "sd": "", "u": "기획분석", "w": " - 기획분석 멘토 / 손해율 총괄\n - UY 손해율 마감 / 장기 재보험 체결 \n - 본부 KPI", "a": "이은경", "empNo": "310522", "grp": "장기보험", "fax": "0507-770-0026", "email": "mjkwon@hi.co.kr"}, {"tel": "02-3701-3886", "n": "박미희", "area": "기획·분석", "p": "과장", "d": "장기전략파트", "sd": "", "u": "기획분석", "w": " - CY 손해율 분석 / CY 사업계획\n - 점포 손해율 평가", "a": "권미정", "empNo": "311063", "grp": "장기보험", "fax": "0507-770-0382", "email": "pmh6044@hi.co.kr"}, {"tel": "02-3701-3891", "n": "이은경", "area": "기획·분석", "p": "대리", "d": "장기전략파트", "sd": "", "u": "기획분석", "w": " - CY 손해율 마감 / 장기 재보험 업무\n - UY 사업계획", "a": "박미희", "empNo": "312275", "grp": "장기보험", "fax": "0507-739-6813", "email": "ekl2602@hi.co.kr"}, {"tel": "02-3701-3491", "n": "박서영", "area": "기획·분석", "p": "선임", "d": "장기전략파트", "sd": "", "u": "기획분석", "w": " - 출재보험료 마감 / 재보험 업무보고서\n - 경쟁사 손해율 / CPC / CPC 전략회의", "a": "김보현", "empNo": "313435", "grp": "장기보험", "fax": "0507-739-7366", "email": "isawu@hi.co.kr"}, {"tel": "02-3701-3512", "n": "김보현", "area": "기획·분석", "p": "전임", "d": "장기전략파트", "sd": "", "u": "기획분석", "w": " - 취소철회 공시 / 통계지원 \n - 상품담보, 담보4 관리 / 실손 업무보고서\n - 본부장회의 / 임원회의", "a": "박서영", "empNo": "313426", "grp": "장기보험", "fax": "0507-739-6757", "email": "bohyunk@hi.co.kr"}, {"tel": "02-3701-8396", "n": "장다연", "area": "기획·분석", "p": "전임", "d": "장기전략파트", "sd": "", "u": "기획분석", "w": " - 일일보고(손해율, 손해액, 실적)\n - 하이포탈 점포별 손해율 / CPC", "a": "김보현", "empNo": "313836", "grp": "장기보험", "fax": "0507-770-1638", "email": "dayeon@hi.co.kr"}, {"tel": "02-3701-3570", "n": "박영찬", "area": "기획·분석", "p": "수석", "d": "장기계약관리부", "sd": "", "u": "", "w": " - 보유계약분석, 유지율", "a": "배소연", "empNo": "307810", "grp": "장기보험", "fax": "0507-770-2734", "email": "dolby@hi.co.kr"}, {"tel": "02-3701-3571", "n": "김근희", "area": "기획·분석", "p": "차장", "d": "장기계약관리부", "sd": "", "u": "", "w": " - 보유계약분석, 집금률", "a": "배소연", "empNo": "308942", "grp": "장기보험", "fax": "0507-770-3255", "email": "zh8190@hi.co.kr"}, {"tel": "02-3701-3576", "n": "배소연", "area": "기획·분석", "p": "전임", "d": "장기계약관리부", "sd": "", "u": "", "w": " - 보유계약분석, 유지율, 집금율", "a": "김근희", "empNo": "313813", "grp": "장기보험", "fax": "0507-770-1567", "email": "soyeon12@hi.co.kr"}, {"tel": "02-3701-3579", "n": "조신혜", "area": "입금/이체/환급", "p": "수석", "d": "장기계약관리부", "sd": "", "u": "", "w": " - 계약전체 해지, 연금, 만기, 중도 지급관련\n - 휴면보험금, 세금우대 시스템\n - 현장지원(콜센터, 손사, 전략채널(제휴, TM), AM1, 영남, 대경, 제주)", "a": "이서원", "empNo": "312306", "grp": "장기보험", "fax": "0507-739-6905", "email": "shinhyecho@hi.co.kr"}, {"tel": "02-3701-3578", "n": "이서원", "area": "입금/이체/환급", "p": "차장", "d": "장기계약관리부", "sd": "", "u": "", "w": " - 계약전체 해지, 연금, 만기, 중도 지급관련\n - 현장지원(강북, 강서, 강남, 강원, 전략채널(방카))", "a": "장해별", "empNo": "312309", "grp": "장기보험", "fax": "0507-739-6908", "email": "leesw@hi.co.kr"}, {"tel": "02-3701-3574", "n": "장해별", "area": "입금/이체/환급", "p": "대리", "d": "장기계약관리부", "sd": "", "u": "", "w": " - 계약전체 해지, 연금, 만기, 중도 지급관련\n - 미지급보험금, 연금저축, 일괄송금, 환급안내문, 납입최고, 손비처리\n - 현장지원(AM2, 북부, 경기, 성남, 경인, 중부, 충청, 호남, 전북, 부산, 경남)", "a": "조신혜", "empNo": "310589", "grp": "장기보험", "fax": "0507-770-0093", "email": "hbjang@hi.co.kr"}, {"tel": "02-3701-3817", "n": "방실", "area": "입금/이체/환급", "p": "대리", "d": "장기계약관리부", "sd": "", "u": "", "w": "- 현장소통(지식센터>장기>현장소통 자료제공)\n- 집금이관 지침", "a": "-", "empNo": "309065", "grp": "장기보험", "fax": "0507-770-3332", "email": "qkdtlf1004@hi.co.kr"}, {"tel": "02-3701-8248", "n": "정초성", "area": "설계/청약/계약변경", "p": "수석", "d": "장기계약관리부", "sd": "이재계약관리팀", "u": "", "w": " - 소급배서 및 인수유의해제(AM1본부, 전략채널본부, 호남지역단, 전북지역단, 부산지역단, 경남지역단, 영남지역단, 대경지역단, 제주사업부)", "a": "류동철", "empNo": "304221", "grp": "장기보험", "fax": "0507-770-1458", "email": "csjeong@hi.co.kr"}, {"tel": "02-3701-8249", "n": "류동철", "area": "설계/청약/계약변경", "p": "수석", "d": "장기계약관리부", "sd": "이재계약관리팀", "u": "", "w": " - 소급배서 및 인수유의해제(AM2본부, 강북지역단, 강서지역단, 강남지역단, 북부지역단, 경기지역단, 성남지역단, 경인지역단, 강원지역단, 중부지역단, 충청지역단)", "a": "정초성", "empNo": "305643", "grp": "장기보험", "fax": "0507-770-1912", "email": "jayuda@hi.co.kr"}, {"tel": "02-3701-8250", "n": "황정섭", "area": "기획·분석", "p": "과장", "d": "장기계약관리부", "sd": "이재계약관리팀", "u": "", "w": " - 이재계약관리 시스템 개선, 이재계약 업무 기획/통계", "a": "권근영", "empNo": "312371", "grp": "장기보험", "fax": "0507-739-7032", "email": "hjs6111@hi.co.kr"}, {"tel": "02-3701-8252", "n": "연미경", "area": "입금/이체/환급", "p": "과장", "d": "장기계약관리부", "sd": "이재계약관리팀", "u": "", "w": " - 관리계약 문의응대(경기AM사업부, 대경지역단, 제주사업부)", "a": "한순미", "empNo": "305008", "grp": "장기보험", "fax": "0507-770-1682", "email": "ymk305008@hi.co.kr"}, {"tel": "02-3701-8253", "n": "안지희", "area": "입금/이체/환급", "p": "대리", "d": "장기계약관리부", "sd": "이재계약관리팀", "u": "", "w": " - 관리계약 문의응대(서초AM사업부, 강북AM사업부, 강북지역단, 북부지역단)", "a": "김진분", "empNo": "305965", "grp": "장기보험", "fax": "0507-770-2028", "email": "ajhspace@hi.co.kr"}, {"tel": "02-3701-8254", "n": "한순미", "area": "입금/이체/환급", "p": "대리", "d": "장기계약관리부", "sd": "이재계약관리팀", "u": "", "w": " - 관리계약 문의응대(대구AM사업부, 부경AM사업부, 호남지역단, 전북지역단, 강원지역단)", "a": "연미경", "empNo": "307241", "grp": "장기보험", "fax": "0507-770-2480", "email": "soupspoon@hi.co.kr"}, {"tel": "02-3701-8241", "n": "김선혜", "area": "입금/이체/환급", "p": "선임", "d": "장기계약관리부", "sd": "이재계약관리팀", "u": "", "w": " - 관리계약 문의응대(중부AM사업부, 경인지역단, 경기지역단, 장기영업1팀, 장기영업2팀)", "a": "유미경", "empNo": "306001", "grp": "장기보험", "fax": "0507-770-2042", "email": "softsh@hi.co.kr"}, {"tel": "02-3701-8244", "n": "유미경", "area": "입금/이체/환급", "p": "선임", "d": "장기계약관리부", "sd": "이재계약관리팀", "u": "", "w": " - 관리계약 문의응대(명동AM사업부, 호남AM사업부, 강서지역단, 강남지역단, 성남지역단)", "a": "김선혜", "empNo": "306578", "grp": "장기보험", "fax": "0507-770-2242", "email": "sora0711@hi.co.kr"}, {"tel": "02-3701-8245", "n": "한동희", "area": "입금/이체/환급", "p": "선임", "d": "장기계약관리부", "sd": "이재계약관리팀", "u": "", "w": " - 관리계약 문의응대(경인AM사업부, 부산지역단, 경남지역단, 영남지역단, 제휴 및 방카영업부)", "a": "안지희", "empNo": "309121", "grp": "장기보험", "fax": "0507-770-3376", "email": "hdh818@hi.co.kr"}, {"tel": "02-3701-8246", "n": "김진분", "area": "입금/이체/환급", "p": "전임", "d": "장기계약관리부", "sd": "이재계약관리팀", "u": "", "w": " - 관리계약 문의응대(강남AM사업부, 부산AM사업부, 중부지역단, 충청지역단)", "a": "한동희", "empNo": "309048", "grp": "장기보험", "fax": "0507-770-3323", "email": "jbkim@hi.co.kr"}, {"tel": "02-6262-0489", "n": "김경미", "area": "인수/심사", "p": "수석의료전담", "d": "장기심사부", "sd": "메디컬기획팀", "u": "", "w": " - 실손바로승인\n - 평생고객, 웰컴 캠페인", "a": "", "empNo": "309971", "grp": "장기보험", "fax": "0507-770-3708", "email": "kkm06@hi.co.kr"}, {"tel": "02-6262-0495", "n": "전소현", "area": "인수/심사", "p": "의료전담", "d": "장기심사부", "sd": "메디컬기획팀", "u": "", "w": " - 암, 간병, 골든타임, 펫보험(피보험자(견주)限) 메디컬 운영", "a": "", "empNo": "313357", "grp": "장기보험", "fax": "0507-770-0617", "email": "hisohyun@hi.co.kr"}, {"tel": "02-6262-0493", "n": "김진아", "area": "인수/심사", "p": "선임의료전담", "d": "장기심사부", "sd": "메디컬기획팀", "u": "", "w": " - 간편상품군 메디컬 운영", "a": "", "empNo": "313143", "grp": "장기보험", "fax": "0507-739-7456", "email": "wwlsdkk@hi.co.kr"}, {"tel": "02-6262-0426", "n": "안수빈", "area": "인수/심사", "p": "의료전담", "d": "장기심사부", "sd": "메디컬기획팀", "u": "", "w": " - 간편상품군 메디컬 운영", "a": "", "empNo": "313355", "grp": "장기보험", "fax": "0507-770-0516", "email": "asb1104@hi.co.kr"}, {"tel": "02-6262-0484", "n": "노태규", "area": "인수/심사", "p": "전임", "d": "장기심사부", "sd": "메디컬기획팀", "u": "", "w": " - 간편상품군 전산 운영\n - 고심도 특인 운영", "a": "", "empNo": "313595", "grp": "장기보험", "fax": "0507-770-1320", "email": "tgrho@hi.co.kr"}, {"tel": "02-6262-0485", "n": "이승은", "area": "인수/심사", "p": "선임의료전담", "d": "장기심사부", "sd": "메디컬기획팀", "u": "", "w": " - 인생의품격, 운전자보험, 치아보험, 전략채널, 방카채널", "a": "", "empNo": "313136", "grp": "장기보험", "fax": "0507-739-6859", "email": ""}, {"tel": "02-6262-0486", "n": "강선아", "area": "인수/심사", "p": "선임의료전담", "d": "장기심사부", "sd": "메디컬기획팀", "u": "", "w": "- 굿앤굿상품군(스타/어린이종합Q) \n- 실손바로승인", "a": "", "empNo": "312871", "grp": "장기보험", "fax": "0507-739-6509", "email": "sunah.kang@hi.co.kr"}, {"tel": "02-6262-0488", "n": "김미수", "area": "인수/심사", "p": "책임의료전담", "d": "장기심사부", "sd": "메디컬기획팀", "u": "", "w": " - 퍼펙트 종합보험(건강고지포함) 질병가이드\n - 하이바로승인 (퍼펙트, 두배암)", "a": "", "empNo": "310108", "grp": "장기보험", "fax": "0507-770-3770", "email": "altn98@hi.co.kr"}, {"tel": "02-6262-0499", "n": "김세희", "area": "인수/심사", "p": "과장", "d": "장기심사부", "sd": "메디컬기획팀", "u": "", "w": " - 협회, 신정원 대관, 심사 손해율 관리\n - 유연/CM 카드제 시스템 관리", "a": "", "empNo": "310531", "grp": "장기보험", "fax": "0507-770-0035", "email": "shkim7@hi.co.kr"}, {"tel": "02-6262-0487", "n": "김태연", "area": "인수/심사", "p": "대리", "d": "장기심사부", "sd": "메디컬기획팀", "u": "", "w": " - 진사, 적부업체 관리, 통계 지표 관리\n - 결재라인 시스템관리, RPA심사 관리", "a": "", "empNo": "305164", "grp": "장기보험", "fax": "0507-770-1731", "email": "hahaha@hi.co.kr"}, {"tel": "02-6262-0492", "n": "김태훈", "area": "인수/심사", "p": "수석", "d": "장기심사부", "sd": "메디컬기획팀", "u": "", "w": " - 메디컬기획팀 총괄", "a": "", "empNo": "307891", "grp": "장기보험", "fax": "0507-770-2778", "email": "k9471030764@hi.co.kr"}, {"tel": "02-3701-8403", "n": "김태균", "area": "설계/청약/계약변경", "p": "수석", "d": "장기시스템파트", "sd": "", "u": "청약", "w": " - 청약시스템 개선\n - OFF상품 계약변경기준 및 시스템 개발", "a": "", "empNo": "308276", "grp": "장기보험", "fax": "0507-770-2949", "email": "hilife@hi.co.kr"}, {"tel": "02-3701-8406", "n": "백승엽", "area": "설계/청약/계약변경", "p": "과장", "d": "장기시스템파트", "sd": "", "u": "청약", "w": " - 상품별 청약시스템 : 간편상품군(3.10.10)", "a": "", "empNo": "313525", "grp": "장기보험", "fax": "0507-770-0825", "email": ""}, {"tel": "02-3701-3487", "n": "채민희", "area": "설계/청약/계약변경", "p": "대리", "d": "장기시스템파트", "sd": "", "u": "청약", "w": " - 상품별 청약시스템 : 저축 / 연금\n - 전자청약\n - 양식(가입제안서 / 증권)", "a": "김정은", "empNo": "305355", "grp": "장기보험", "fax": "0507-770-1792", "email": "ck3053@hi.co.kr"}, {"tel": "02-3701-8394", "n": "김정은", "area": "설계/청약/계약변경", "p": "대리", "d": "장기시스템파트", "sd": "", "u": "청약", "w": " - 양식(청약서 / 상품설명서)\n - EDMS (스캔)", "a": "채민희", "empNo": "305436", "grp": "장기보험", "fax": "0507-770-1827", "email": "kje252002@hi.co.kr"}, {"tel": "02-3701-3493", "n": "이기용", "area": "설계/청약/계약변경", "p": "대리", "d": "장기시스템파트", "sd": "", "u": "청약", "w": " - 상품별 청약시스템\n └ 굿앤굿상품군(어린이Q / 스타 /5.10.10)\n └ 실손의료비 상품군 / 치아 / 간병\n - 모바일(S포탈) 가입설계 \n - 청약 수납", "a": "진수진", "empNo": "306645", "grp": "장기보험", "fax": "0507-770-2266", "email": "constant28@hi.co.kr"}, {"tel": "02-3701-3492", "n": "김수희", "area": "설계/청약/계약변경", "p": "대리", "d": "장기시스템파트", "sd": "", "u": "청약", "w": " - 상품별 청약시스템 \n └ 재물상품군(성공마스터 / 행복가득) / 골든타임 / 펫보험\n └ 운전자군(뉴하이카 / 바이크 / 하이콜™ / 마음플러스™)\n - 대외전산망(신정원) ", "a": "이제준", "empNo": "308078", "grp": "장기보험", "fax": "0507-770-2865", "email": "fruit620@hi.co.kr"}, {"tel": "02-3701-3489", "n": "이제준", "area": "설계/청약/계약변경", "p": "대리", "d": "장기시스템파트", "sd": "", "u": "청약", "w": " - 상품별 청약시스템\n └ 퍼펙트 상품군 (5.10.10 / 현명한 / 하이콜퍼펙트 ™)\n └ 방카상품군, 단체", "a": "김수희", "empNo": "311446", "grp": "장기보험", "fax": "0507-770-0699", "email": "lee_jejun@hi.co.kr"}, {"tel": "02-3701-3513", "n": "진수진", "area": "설계/청약/계약변경", "p": "대리", "d": "장기시스템파트", "sd": "", "u": "청약", "w": " - 상품별 청약시스템\n └ 간편상품군(3N / 오투)\n └ CM상품군(퍼펙트 / 어린이 / 재물 / 펫 / 실손 / 저축 / 운전자 / 치아)\n └ 암보험\n - 간편적정성 심사 프로세스", "a": "이기용", "empNo": "313059", "grp": "장기보험", "fax": "0507-770-0300", "email": "jsj88@hi.co.kr"}, {"tel": "02-3701-3572", "n": "양진모", "area": "설계/청약/계약변경", "p": "수석", "d": "장기시스템파트", "sd": "", "u": "변경", "w": " - 계약변경 공통기준\n - 계약조회시스템\n - 연말정산\n - 신정원(계약변경)\n - 변경(강남, 중부, 충청, 호남, 전북지역단 / AM1본부)", "a": "조현숙 대리\n(강남,중부,충청,호남,전북)\n조선희 대리\n(AM1, 이재)", "empNo": "308012", "grp": "장기보험", "fax": "0507-770-2835", "email": "yjinmo@hi.co.kr"}, {"tel": "02-3701-3577", "n": "조현숙", "area": "설계/청약/계약변경", "p": "대리", "d": "장기시스템파트", "sd": "", "u": "변경", "w": " - 재물·실손 계약변경기준\n - 태아확정 및 정산\n - 변경(강북, 강서, 북부, 경기, 성남, 경인지역단 / AM2본부)", "a": "양진모 수석\n(강북,강서,북부,경기,성남,경인)\n조선희 대리\n(AM2)", "empNo": "306637", "grp": "장기보험", "fax": "0507-770-2262", "email": "zzang2da@hi.co.kr"}, {"tel": "02-3701-8404", "n": "조선희", "area": "설계/청약/계약변경", "p": "대리", "d": "장기시스템파트", "sd": "", "u": "변경", "w": " - 전략채널 및 CM상품 계약변경기준\n - 계약변경 관련 서식 관리\n - 해외장기체류 실손 사후환급·납입중지 / 군장병 실손중지·재개\n - 변경(강원, 부산, 경남, 영남, 대경지역단 / 제주사업부 / 전략채널 및 CM)", "a": "양진모 수석\n(강원,부산,경남)\n조현숙대리\n(영남,대경,제주,전략채널,CM)", "empNo": "307437", "grp": "장기보험", "fax": "0507-770-2563", "email": "sunny79@hi.co.kr"}, {"tel": "02-3701-8405", "n": "노경선", "area": "입금/이체/환급", "p": "과장", "d": "장기시스템파트", "sd": "", "u": "입금", "w": " - 자동이체 / 신용카드 / 즉시이체\n - 선납 및 입금취소\n - 입금업무 및 집금이관시스템 현장응대(AM, 전략채널)", "a": "안준미", "empNo": "303939", "grp": "장기보험", "fax": "0507-770-1386", "email": "akka008@hi.co.kr"}, {"tel": "02-3701-8409", "n": "안준미", "area": "입금/이체/환급", "p": "대리", "d": "장기시스템파트", "sd": "", "u": "입금", "w": " - 계약부활\n - 연금 및 저축성보험 추가납입\n - 직역단체 및 급여이체 관리 / 지로\n - 입금업무 및 집금이관시스템 현장응대 (CM, 개인채널)", "a": "노경선", "empNo": "304477", "grp": "장기보험", "fax": "0507-770-1535", "email": "a304477@hi.co.kr"}, {"tel": "02-3701-8407", "n": "현서하", "area": "설계/청약/계약변경", "p": "과장", "d": "장기시스템파트", "sd": "", "u": "갱신", "w": " - 자동갱신\n - 갱신·적립증액", "a": "홍석빈", "empNo": "312284", "grp": "장기보험", "fax": "0507-739-6822", "email": "shhyun@hi.co.kr"}, {"tel": "02-3701-3580", "n": "홍석빈", "area": "설계/청약/계약변경", "p": "전임", "d": "장기시스템파트", "sd": "", "u": "갱신", "w": " - 자동갱신\n - 갱신·적립증액\n - 보험계약관리내용안내문", "a": "현서하", "empNo": "313643", "grp": "장기보험", "fax": "0507-770-1309", "email": "seokbin0430@hi.co.kr"}, {"tel": "02-3701-8612", "n": "송은경", "area": "마케팅/영업", "p": "수석", "d": "마케팅기획파트", "sd": "", "u": "", "w": " - 하이플래너 제재", "a": "", "empNo": "307030", "grp": "마케팅", "fax": "0507-770-2407", "email": "songsis@hi.co.kr"}, {"tel": "02-3701-8611", "n": "윤석환", "area": "마케팅/영업", "p": "차장", "d": "마케팅기획파트", "sd": "", "u": "수당수수료", "w": " - 전속채널 영업지원기준 개정 및 운영\n - GA/TM채널 수수료지급기준 개정 및 운영", "a": "신석중", "empNo": "309732", "grp": "마케팅", "fax": "0507-770-3651", "email": "seokhwany@hi.co.kr"}, {"tel": "02-3701-8978", "n": "류용배", "area": "마케팅/영업", "p": "과장", "d": "마케팅기획파트", "sd": "", "u": "", "w": " - 마감실적 현황관리 및 분석\n - 회의체 운영 (CPC/마케팅 전략회의)\n - 장기지표(유지율, 집금률) 통계 관리\n - 연간 매출 목표 관리 및 조정 기준 운영", "a": "", "empNo": "310546", "grp": "마케팅", "fax": "0507-770-0050", "email": "ryuww@hi.co.kr"}, {"tel": "02-3701-3237", "n": "신석중", "area": "마케팅/영업", "p": "과장", "d": "마케팅기획파트", "sd": "", "u": "수당수수료", "w": " - 전속채널 영업지원기준 개정 및 운영\n - GA/TM채널 수수료지급기준 개정 및 운영\n - 장기보험 수정률 산출 및 관리\n - 장기보험 집중관리계약제도 (우수플래너제도 포함) 운영", "a": "윤석환", "empNo": "311537", "grp": "마케팅", "fax": "0507-770-0109", "email": "sjshin@hi.co.kr"}, {"tel": "02-3701-3232", "n": "이진환", "area": "마케팅/영업", "p": "선임", "d": "마케팅기획파트", "sd": "", "u": "", "w": " - 하이포털 마케팅 화면 관리\n - 점포현황(외곽/AM지점 포함) 관리\n - 영업사업비 집행 관리 및 분석", "a": "", "empNo": "313334", "grp": "마케팅", "fax": "0507-770-0405", "email": "jinhwanlee@hi.co.kr"}, {"tel": "02-3701-8619", "n": "신정희", "area": "마케팅/영업", "p": "수석", "d": "마케팅지원파트", "sd": "", "u": "", "w": " - 영업포탈 공통 기능 및 화면(로그인, 메인 화면, 공지사항 등) 운영 관리\n - 영업포탈(하이포탈 포함) 팝업 공지사항 등록 관리\n - 영업포탈 태블릿 유지보수", "a": "정진희", "empNo": "308788", "grp": "마케팅", "fax": "0507-770-3198", "email": "junghee82@hi.co.kr"}, {"tel": "02-3701-8633", "n": "김미숙", "area": "마케팅/영업", "p": "과장", "d": "마케팅지원파트", "sd": "", "u": "수당수수료", "w": " - 수당수수료 집행관리\n - 제지급금 조정 요청건 심사 및 지급 (개인부문 / AM부문)\n - 설계사 연말정산", "a": "", "empNo": "305946", "grp": "마케팅", "fax": "0507-770-2023", "email": "7711romi@hi.co.kr"}, {"tel": "02-3701-8635", "n": "전경선", "area": "마케팅/영업", "p": "차장", "d": "마케팅지원파트", "sd": "", "u": "수당수수료", "w": " - 수당수수료 집행관리\n - 장기보험정산Ⅱ (차액거래관리)\n - 수당수수료 전표 마감 및 공제 처리\n - 설계사 복리후생성과 (건강검진 및 경조지원) 집행관리\n - 설계사 건강검진 운영\n - 설계사 미수 통계관리 및 전산지원\n - 대리점 전자계산서 관리 및 합계표 신고\n - 제지급금 조정 요청건 심사 및 지급 (수도권 지역단)", "a": "", "empNo": "309517", "grp": "마케팅", "fax": "0507-770-3557", "email": "ksjeon@hi.co.kr"}, {"tel": "02-3701-8622", "n": "지민우", "area": "마케팅/영업", "p": "과장", "d": "마케팅지원파트", "sd": "", "u": "", "w": " - 점포운영비 기준수립 및 예산배정\n - 영업직 교통비 및 통신비 기준수립 및 예산배정", "a": "", "empNo": "311561", "grp": "마케팅", "fax": "0507-770-0203", "email": "jimw@hi.co.kr"}, {"tel": "02-3701-8625", "n": "유준호", "area": "마케팅/영업", "p": "과장", "d": "마케팅지원파트", "sd": "", "u": "", "w": " - 연도대상 평가기준 수립 및 진도 관리\n - 연도대상 시상식 진행 관련 일체 업무\n - 점포관리자 마감 포상운영 및 관리\n - 외곽대리점 전산 효율평가 기준수립 및 운영", "a": "", "empNo": "312343", "grp": "마케팅", "fax": "0507-739-7004", "email": "yoojh@hi.co.kr"}, {"tel": "02-3701-8632", "n": "박성민", "area": "마케팅/영업", "p": "대리", "d": "마케팅지원파트", "sd": "", "u": "수당수수료", "w": " - 영업시책비 집행관리\n - 퇴직자지원비 기준수립 및 관리\n - 외곽대리점 임차효율평가 기준수립 및 운영\n - 설계사 연말정산\n - 설계사 하이페이(Hi-pay) 지급 및 운영관리\n - 신인루키 운영 및 관리\n - 하이몰 운영 관리", "a": "", "empNo": "312268", "grp": "마케팅", "fax": "0507-739-6806", "email": "park8457@hi.co.kr"}, {"tel": "02-3701-8974", "n": "정진희", "area": "마케팅/영업", "p": "선임", "d": "마케팅지원파트", "sd": "", "u": "", "w": " - 보장분석 시스템 운영 및 관리 (당/타사 담보 업데이트 및 매핑데이터 관리 등)\n - Hi-S포탈(에스포탈) 시스템 운영\n - 영업포탈 현장 건의사항 대응 및 장애 관리\n - 모바일 고객터치 콘텐츠 운영 및 관리", "a": "", "empNo": "310051", "grp": "마케팅", "fax": "0507-770-3755", "email": "jjh@hi.co.kr"}, {"tel": "02-3701-8735", "n": "김승원", "area": "마케팅/영업", "p": "전임", "d": "마케팅지원파트", "sd": "", "u": "", "w": " - 설계사(전속,교차,GA) 인사업무 (등록, 위촉, 해촉, 변경)\n - 설계사 인사 전산관리\n - 블루리본, 우수인증 설계사 선발 및 운영\n - 응시·등록비 정산, 해촉이관, 위탁계약서, 위촉심사지침, 신원보증\n - 특수형태근로자(특고) 산재보험·고용보험 관리", "a": "최민영", "empNo": "309625", "grp": "마케팅", "fax": "0507-770-3591", "email": "kswsw1123@hi.co.kr"}, {"tel": "02-3701-8736", "n": "최민영", "area": "마케팅/영업", "p": "전임", "d": "마케팅지원파트", "sd": "", "u": "", "w": " - 대리점 인사업무 (등록, 변경, 해지, 폐지, 신분전환, 인수합병 등)\n - 위촉심사지침, 소속변경, 기타인사서류 변경 등 관리\n - 설계사 인사 전산관리\n - 설계사 수당수수료 채권압류\n - 영업포탈 및 하이포탈 SMS 시스템 운영", "a": "김승원", "empNo": "310918", "grp": "마케팅", "fax": "0507-770-0312", "email": "alsdud3023@hi.co.kr"}, {"tel": "02-3701-8630", "n": "민성민", "area": "마케팅/영업", "p": "차장", "d": "장기마케팅파트", "sd": "", "u": "", "w": " - 장기보험 영업전략 및 판매지원전략 수립", "a": "", "empNo": "309483", "grp": "마케팅", "fax": "0507-770-3530", "email": "sungmin@hi.co.kr"}, {"tel": "02-3701-8972", "n": "박형민", "area": "마케팅/영업", "p": "과장", "d": "장기마케팅파트", "sd": "", "u": "", "w": " - 장기보험 영업전략 및 판매지원전략 수립", "a": "", "empNo": "310138", "grp": "마케팅", "fax": "0507-770-3796", "email": "bsbses@hi.co.kr"}, {"tel": "02-3701-8618", "n": "홍정환", "area": "마케팅/영업", "p": "차장", "d": "장기마케팅파트", "sd": "", "u": "", "w": " - 장기보험 영업전략 및 판매지원전략 수립\n - 판매지원워크샵 지원", "a": "", "empNo": "310191", "grp": "마케팅", "fax": "0507-770-3841", "email": "samuehong@hi.co.kr"}, {"tel": "02-3701-8976", "n": "김준태", "area": "마케팅/영업", "p": "대리", "d": "장기마케팅파트", "sd": "", "u": "", "w": " - 상품안내장 / 리플렛 등 영업지원자료 제작 및 지원\n - 영업포탈 영업지원자료실 운영 및 자료 관리\n - 정보미팅 교안 및 판매지원자료(교육용) 전산심의", "a": "", "empNo": "311050", "grp": "마케팅", "fax": "0507-770-0308", "email": "kjt0315@hi.co.kr"}, {"tel": "02-3701-3243", "n": "윤병수", "area": "마케팅/영업", "p": "차장", "d": "DB마케팅부", "sd": "DB운영팀", "u": "", "w": " - 전속채널 (TC/CPA) DB지원기준 수립 및 운영 (배분, 회수, 성과분석)\n - 이관고객관리 프로세스 운영 (활동평가, 진도 및 전산관리)", "a": "", "empNo": "309272", "grp": "마케팅", "fax": "0507-770-3442", "email": "orppeo@hi.co.kr"}, {"tel": "02-3701-3240", "n": "장한", "area": "마케팅/영업", "p": "차장", "d": "DB마케팅부", "sd": "DB운영팀", "u": "", "w": " - 전사DB운영기준 운영\n - 타겟DB 운영 및 개선\n - 전속채널 (TC/CPA) DB지원기준 수립 및 운영\n - 방문약속DB 운영 활성화", "a": "", "empNo": "310588", "grp": "마케팅", "fax": "0507-770-0092", "email": "jh3556@hi.co.kr"}, {"tel": "02-3701-3244", "n": "신승은", "area": "마케팅/영업", "p": "선임", "d": "DB마케팅부", "sd": "DB운영팀", "u": "", "w": " - 타겟DB 운영 및 개선\n - CRM플래너 운영기준 수립 및 운영", "a": "", "empNo": "313176", "grp": "마케팅", "fax": "0507-770-0651", "email": "seshin025@hi.co.kr"}, {"tel": "02-3701-3236", "n": "이지혜", "area": "마케팅/영업", "p": "차장", "d": "DB마케팅부", "sd": "DB개발팀", "u": "", "w": " - 실손전환센터 대상DB 알림톡 발송\n - 하이포탈 개인고객 정보주체권리보장, 삭제/조회차단요청, 주민등록번호변경요청 관리", "a": "김은영", "empNo": "308809", "grp": "마케팅", "fax": "0507-770-3217", "email": "jhblooms@hi.co.kr"}, {"tel": "02-3701-8732", "n": "배영희", "area": "마케팅/영업", "p": "과장", "d": "DB마케팅부", "sd": "DB개발팀", "u": "", "w": " - 전략채널 콜 퍼미션 진행관리 및 AICC활용 마케팅동의 확대\n - 임직원 보장분석 실행관리 및 보장분석툴 고도화", "a": "", "empNo": "309264", "grp": "마케팅", "fax": "0507-770-3436", "email": "younghee@hi.co.kr"}, {"tel": "02-3701-3239", "n": "김영주", "area": "마케팅/영업", "p": "대리", "d": "DB마케팅부", "sd": "DB개발팀", "u": "", "w": " - 장기상품 부가서비스 운영 관리", "a": "", "empNo": "308080", "grp": "마케팅", "fax": "0507-770-2866", "email": "youjuk@hi.co.kr"}, {"tel": "02-3701-3234", "n": "방서연", "area": "마케팅/영업", "p": "전임", "d": "DB마케팅부", "sd": "DB개발팀", "u": "", "w": " - TM채널 POM DB 운영", "a": "", "empNo": "313605", "grp": "마케팅", "fax": "0507-770-1355", "email": "seoyeonb@hi.co.kr"}, {"tel": "02-3701-3249", "n": "김은영", "area": "마케팅/영업", "p": "전임", "d": "DB마케팅부", "sd": "DB개발팀", "u": "", "w": " - 하이/영업포탈 '개인고객 정보관리' 화면 및 전산시스템 관리\n - 표준동의서 양식 (가입설계동의, 상품소개동의) 및 데이터 관리\n - 장기보험 해외납세의무, 고객 연말정산 ", "a": "이지혜", "empNo": "308561", "grp": "마케팅", "fax": "0507-770-3083", "email": "e0lover@hi.co.kr"}, {"tel": "02-3701-8522", "n": "박성호", "area": "인수/심사", "p": "수석", "d": "자동차업무파트", "sd": "", "u": "마일리지/구상", "w": " -  전산 시스템 운영 기간계 시스템 운영 및 (도메인 관리) , 마일리지 특약 전산 운영 및 관리\n -  구상심의: 구상기준 , 심의위원회 운영 등  , 개인정보 관리: 지침 기획/운영 및 유관부서 협의\n -  보험개발원 관련 업무: 대외전산망 관리 , 기초통계자료 작성 관리 및 정합성 관리\n -  제안제도 및 VOC 제도개선 담당자 지정 , 대외기관 요청자료 대응 ( 금감원, 개발원, 손보협)", "a": "허회", "empNo": "307976", "grp": "자동차보험", "fax": "0507-770-2825", "email": "goodsean@hi.co.kr"}, {"tel": "02-3701-8528", "n": "허회", "area": "설계/청약/계약변경", "p": "차장", "d": "자동차업무파트", "sd": "", "u": "가입설계/청약", "w": " -  설계/확정 상품/제도/기획 개발 가입설계 및 청약확정,  전산 시스템 기획 및 운영/관리(총괄)\n -  가입설계 및 체결 관련 지침 및 매뉴얼, 상품시스템 관리, 전자서명 프로세스, 신상품, 제도개선 \n -  계약적정성 심사 : 적용요율 자동산출, 총무심사, 소유자불일치 승인 업무 등\n -  판매채널별 업무지원 총괄, 소비자보호 관리: 소비자보호역 수행", "a": "전현선", "empNo": "310189", "grp": "자동차보험", "fax": "0507-770-3839", "email": "huhhoe@hi.co.kr"}, {"tel": "02-3701-8524", "n": "전현선", "area": "설계/청약/계약변경", "p": "대리", "d": "자동차업무파트", "sd": "", "u": "가입설계/청약", "w": " -  가입설계 및 청약확정 전산 시스템 기획 및 운영/관리 (기존 판매상품, 신상품, 제도개선 포함)\n -  취급업자, On&Off 등 기타보종 관리, 전자서명 프로세스, 설계명세조회\n -  대외기관 송부자료 관리: 사망생존자 / 실손담보 /  보험계약자료 시스템 지원\n -  판매채널별 업무지원: OFF 채널(전속, GA) 업무지원", "a": "허회", "empNo": "307739", "grp": "자동차보험", "fax": "0507-770-2706", "email": "gloryhs@hi.co.kr"}, {"tel": "02-3701-8523", "n": "김동환", "area": "설계/청약/계약변경", "p": "전임", "d": "자동차업무파트", "sd": "", "u": "가입설계/청약", "w": " - 가입설계 및 청약확정 전산 시스템 운영 지원 (기존 판매상품, 신상품, 제도개선 포함)\n - 취급업자, On&Off 등 기타보종 관리 \n - 할인형 특약 관리: 할인형 특약 전산 시스템 기획 및 운영/관리\n - 미경과보험료 기초 데이터 발송", "a": "허회", "empNo": "313792", "grp": "자동차보험", "fax": "0507-770-1599", "email": "keemdh99@hi.co.kr"}, {"tel": "02-3701-8525", "n": "박선희", "area": "설계/청약/계약변경", "p": "대리", "d": "자동차업무파트", "sd": "", "u": "계약변경", "w": " -  계약변경 운영, 유지관리: 계약변경 업무 및 전산 시스템 기획/운영/관리\n -  대내/외 기관 지원: 가수보험료 요청건 관리, 홈페이지/콜센터 지원, 보험사기 및 과오납 관리\n -  판매채널별 업무지원: TM 채널 업무지원", "a": "김진아", "empNo": "312005", "grp": "자동차보험", "fax": "0507-770-0770", "email": "winey310@hi.co.kr"}, {"tel": "02-3701-8527", "n": "김진아", "area": "설계/청약/계약변경", "p": "선임", "d": "자동차업무파트", "sd": "", "u": "계약변경\n차명코드 관리", "w": " - 계약변경 운영, 유지관리: 계약변경 업무 및 전산 시스템 기획/운영/관리\n - 차명코드 관리: 차명코드 관련 지침, 시스템 유지 관리\n - 계약 조회, 화면·정보 운영, 유지관리: 계약명세(상세)조회, 조회 차단, 삭제, 분리보관\n - 각종 명세성 조회화면(관리대상 업무 등) 운영 및 유지관리", "a": "김동환", "empNo": "309628", "grp": "자동차보험", "fax": "0507-770-3594", "email": "jina309628@hi.co.kr"}, {"tel": "02-3701-8526", "n": "장병현", "area": "입금/이체/환급", "p": "대리", "d": "자동차업무파트", "sd": "", "u": "발행/의무보험\n부가서비스", "w": " - 발행 및 계약서류 관리:  On-Line/Batch 발행 실무 EDMS등록 기준/시스템 운영, 계약서류\n - 분납/보험료 입금 관리: 자동이체, 즉시이체, 최고(실효 포함) 관리\n - 의무보험 관리: 차량/차대번호 오류관리, 의무보험 개발원 업무 관리,  개인정보 회신 업무\n - 예산편성 및 사업비 편성 및 집행, 부가서비스 계약 및 운영 관리 ", "a": "전현선", "empNo": "312104", "grp": "자동차보험", "fax": "0507-770-0870", "email": "durskfrja@hi.co.kr"}, {"tel": "02-3701-8534", "n": "최현덕", "area": "설계/청약/계약변경", "p": "대리", "d": "자동차업무파트", "sd": "", "u": "대외인터페이스", "w": " -  대외 인터페이스 개발·지원: 차량제조사, 티맵, 대중교통 등 대외 인터페이스 관리\n -  외부 업체 정보조회 用 개인정보(선택)동의서 기획, 관련 정보 조회 화면 및 Data 관리\n -  보험료 GA 비교견적, 보험다모아 시스템 관리, 상품/특약 판매 후 현황분석 (모니터링)\n -  상품/특약 판매 후 현황분석 (모니터링)", "a": "김동환", "empNo": "312154", "grp": "자동차보험", "fax": "0507-770-0919", "email": "hdchoi@hi.co.kr"}, {"tel": "02-3701-8529", "n": "김호중", "area": "인수/심사", "p": "수석", "d": "자동차업무파트", "sd": "", "u": "심사총괄", "w": " -  자동차보험 인수전략 수립, 스코어링 시스템 고도화 및 운영 지원, 하이캡 목표달성 방안 수립 및 운영\n -  영업, 업무용 주요 업체 평가: 주요 렌터카 업체 및 나라장터 단체업체특성요율 검토\n -  기타보종 업체 평가: 대리운전, On&Off,  부서업무 기획 / 법인영업 지원 / 영업현장 방문 기획", "a": "최현덕", "empNo": "308588", "grp": "자동차보험", "fax": "0507-770-3090", "email": "wish7711@hi.co.kr"}, {"tel": "02-2116-1202", "n": "박진희", "area": "인수/심사", "p": "대리", "d": "자동차업무파트", "sd": "", "u": "심사/통계", "w": " -  연간인수심사(업무용):  업무용 법인업체 일괄평가 및 전산 반영 (보유자코드 포함) 및 연간인수 심사\n -  통계자료 작성:  월 통계자료 작성(렌터카, 대리운전 , On&Off 손해상황)\n -  전입자 OJT프로그램 교육 및 멘토 수행, 내부통제 담당\n - 전산심사外 담당지역단: 부경AM, 부산AM, 명동AM, 호남AM, 본사/법인제휴, 북부지역단, 중부지역단, 부산지역단, 제주사업부", "a": "최슬기", "empNo": "306672", "grp": "자동차보험", "fax": "0507-770-2271", "email": "scherzo@hi.co.kr"}, {"tel": "02-2116-1202", "n": "최슬기", "area": "인수/심사", "p": "전임", "d": "자동차업무파트", "sd": "", "u": "심사/통계", "w": " -  연간인수 심사(이륜차): 이륜차 단체 평가 및 전산 관련 업무 (보유자코드 포함)\n -  나라장터(입찰): 입찰 업무 전반(업무 프로세스, 매뉴얼 관리 등)\n - 전산심사外 담당부서: CM, 강북AM, 경인AM, 경기AM, 경기지역단, 대경지역단, 성남지역단", "a": "박진희", "empNo": "310920", "grp": "자동차보험", "fax": "0507-770-0315", "email": "hi3192@hi.co.kr"}, {"tel": "02-2116-1202", "n": "전현경", "area": "인수/심사", "p": "선임", "d": "자동차업무파트", "sd": "", "u": "심사", "w": " -  법인제휴팀 지원: 법인제휴 입찰 관리 및 업무 지원\n -  나라장터(입찰): 입찰 업무 전반(업무 프로세스, 매뉴얼 관리 등)\n - 전산심사外 담당사업부: 중부AM, TM자동차영업부, 강남지역단, 충청지역단, 영남지역단", "a": "손혜란", "empNo": "308356", "grp": "자동차보험", "fax": "0507-770-2994", "email": "neojhk@hi.co.kr"}, {"tel": "02-2116-1202", "n": "조인혜", "area": "인수/심사", "p": "선임", "d": "자동차업무파트", "sd": "", "u": "심사", "w": " - 연간인수 심사(영업용): 영업용 법인 평가 및 전산 관련 업무 (보유자코드 포함)\n -  부서 근태 운영 계획(휴가, 당번 일정 관리)\n - 전산심사外 담당부서: 대구AM, 부평영업팀, 강북지역단, 경남지역단, 호남지역단, 강원지역단 / 영업용 보유자코드", "a": "박진희", "empNo": "309645", "grp": "자동차보험", "fax": "0507-770-3610", "email": "h309645@hi.co.kr"}, {"tel": "02-2116-1202", "n": "손혜란", "area": "인수/심사", "p": "선임", "d": "자동차업무파트", "sd": "", "u": "심사", "w": " -  심사업무 관리: 하이미(지식 폴더, COP), 인수심사 가이드라인 관리\n -  CAIS(차량 미수선, 전손 사고이력 조회) 사용자 관리 운영\n -  심사업무 배정 관리: 업무담당 배정 전산 운영\n - 전산심사外 담당부서: 강남AM, 서초AM, 시청영업팀, 강서지역단, 경인지역단, 전북지역단", "a": "박진희", "empNo": "309072", "grp": "자동차보험", "fax": "0507-770-3337", "email": "lunaes3090@hi.co.kr"}, {"tel": "02-6744-1584", "n": "홍명호", "area": "소비자보호", "p": "수석", "d": "소비자지원부", "sd": "완전판매지원팀", "u": "완전판매", "w": " - 청약서류 점검(표본/현장/테마)\n - 안전판매 현장교육\n - 완전판매모니터링 Q&A 상담 및 조치", "a": "", "empNo": "303871", "grp": "소비자", "fax": "0507-770-1362", "email": "hmh123@hi.co.kr"}, {"tel": "02-6744-1574", "n": "최승준", "area": "소비자보호", "p": "수석", "d": "소비자지원부", "sd": "완전판매지원팀", "u": "완전판매", "w": " - 청약서류 점검(표본/현장/테마)\n - 안전판매 현장교육\n - 완전판매모니터링 Q&A 상담 및 조치", "a": "", "empNo": "303890", "grp": "소비자", "fax": "0507-770-1373", "email": "chois386@hi.co.kr"}, {"tel": "02-6744-1575", "n": "엄운섭", "area": "소비자보호", "p": "수석", "d": "소비자지원부", "sd": "완전판매지원팀", "u": "완전판매", "w": " - 청약서류 점검(표본/현장/테마)\n - 안전판매 현장교육\n - 완전판매모니터링 Q&A 상담 및 조치", "a": "", "empNo": "303993", "grp": "소비자", "fax": "0507-770-1398", "email": "angkom@hi.co.kr"}, {"tel": "02-6744-1590", "n": "박일건", "area": "소비자보호", "p": "수석", "d": "소비자지원부", "sd": "완전판매지원팀", "u": "완전판매", "w": " - 청약서류 점검(표본/현장/테마)\n - 안전판매 현장교육\n - 완전판매모니터링 Q&A 상담 및 조치", "a": "", "empNo": "304019", "grp": "소비자", "fax": "0507-770-1407", "email": "igpark@hi.co.kr"}, {"tel": "02-6744-1573", "n": "신현덕", "area": "소비자보호", "p": "수석", "d": "소비자지원부", "sd": "완전판매지원팀", "u": "완전판매", "w": " - 청약서류 점검업무 총괄(표본점검 및 현장점검 부서 선정 및 완전판매지원실장 매칭)\n - 청약서류 점검 통계 관리", "a": "", "empNo": "304258", "grp": "소비자", "fax": "0507-770-1473", "email": "heedong-hd@hi.co.kr"}, {"tel": "02-6744-1572", "n": "김민식", "area": "소비자보호", "p": "수석", "d": "소비자지원부", "sd": "완전판매지원팀", "u": "완전판매", "w": " - 완전판매지원업무 : 완전판매보수교육, 완전판매마스터 제도, 완전판매지원실장 교육\n - 청약서류점검업무 : 현장점검, 테마점검", "a": "신현덕", "empNo": "304333", "grp": "소비자", "fax": "0507-770-1504", "email": "minsik@hi.co.kr"}, {"tel": "02-2116-1206", "n": "김선태", "area": "인수/심사", "p": "수석", "d": "일반UW지원파트", "sd": "", "u": "", "w": " - 인수심사\n  └ 화재보험(주택화재보험, 일반화재보험, 공장화재보험)\n  └ 재물보험(하이기업종합플럿, 하이비즈재산종합보험, 국문동산종합보험 등)\n  └ 책임보험(영업배상, 생산물배상 등), 상해보험(단체상해), 근재보험(국내근재, 해외근재)\n  └ 담당 : [AM] 중부AM, 대구AM, [개인] 강북지역단, 북부지역단, 경인지역단\n- 일반보험 공통 전산 시스템 유지 관리(단, 보통상해 / 단체상해 / 여행자보험은 특종UW파트)", "a": "", "empNo": "304659", "grp": "일반보험", "fax": "0507-770-1576", "email": "kimst@hi.co.kr"}, {"tel": "02-6744-1582", "n": "김선봉", "area": "소비자보호", "p": "수석", "d": "소비자지원부", "sd": "완전판매지원팀", "u": "완전판매", "w": " - 청약서 점검, Q&A(점검종료, 실시간 제제해제 관련건)", "a": "", "empNo": "304693", "grp": "소비자", "fax": "0507-770-1589", "email": "sundarree@hi.co.kr"}, {"tel": "02-6744-1599", "n": "조은영", "area": "소비자보호", "p": "선임", "d": "소비자지원부", "sd": "고객서비스지원팀", "u": "고객서비스", "w": " - 콜센터 자동차 제환급                                                                                                  \n - 콜센터 녹취신청", "a": "조민재", "empNo": "304917", "grp": "소비자", "fax": "0507-770-1656", "email": "ska2love@hi.co.kr"}, {"tel": "02-2116-1206", "n": "김지연", "area": "인수/심사", "p": "대리", "d": "일반UW지원파트", "sd": "", "u": "", "w": " - 인수심사\n  └ 화재보험(주택화재보험, 일반화재보험, 공장화재보험)\n  └ 재물보험(하이기업종합플럿, 하이비즈재산종합보험, 국문동산종합보험 등)\n  └ 책임보험(영업배상, 생산물배상 등), 상해보험(단체상해), 근재보험(국내근재, 해외근재)\n  └ 담당 : [AM] 경인AM, 부산AM, 부경AM [개인] 부산지역단, 경남지역단, 영남지역단, 대구지역단, 제주사업부\n  - 일반보험 공통 전산 시스템 유지 관리(단, 보통상해 / 단체상해 / 여행자보험은 특종UW파트)", "a": "", "empNo": "305161", "grp": "일반보험", "fax": "0507-770-1729", "email": "nakjy@hi.co.kr"}, {"tel": "02-2116-1206", "n": "정하린", "area": "인수/심사", "p": "선임", "d": "일반UW지원파트", "sd": "", "u": "", "w": " - 인수심사\n  └ 화재보험(주택화재보험, 일반화재보험, 공장화재보험)\n  └ 재물보험(하이기업종합플럿, 하이비즈재산종합보험, 국문동산종합보험 등)\n  └ 책임보험(영업배상, 생산물배상 등), 상해보험(단체상해), 근재보험(국내근재, 해외근재)\n  └ 담당 : [AM] 명동AM, 강남AM, [개인] 경기지역단, 중부지역단, 충청지역단, 호남지역단\n - 일반보험 공통 전산 시스템 유지 관리(단, 보통상해 / 단체상해 / 여행자보험은 특종UW파트)", "a": "", "empNo": "305298", "grp": "일반보험", "fax": "0507-770-1773", "email": "jhk1977@hi.co.kr"}, {"tel": "02-6744-1580", "n": "송규섭", "area": "소비자보호", "p": "수석", "d": "소비자지원부", "sd": "완전판매지원팀", "u": "완전판매", "w": " - 청약서류 점검(표본/현장/테마)\n - 안전판매 현장교육\n - 완전판매모니터링 Q&A 상담 및 조치", "a": "", "empNo": "305490", "grp": "소비자", "fax": "0507-770-1841", "email": "1111@hi.co.kr"}, {"tel": "", "n": "김덕수", "area": "소비자보호", "p": "수석", "d": "소비자지원부", "sd": "완전판매지원팀", "u": "완전판매", "w": " - 미스터리쇼핑 기획 및 운영 : 당사 및 금감원 주관 미스터리쇼핑 전반\n - 청약서류 점검 : 현장점검, 테마점검 등\n - 부서 회의자료 : 본부 월간회의, 임원회의 등", "a": "", "empNo": "306351", "grp": "소비자", "fax": "", "email": ""}, {"tel": "02-6744-1583", "n": "장윤창", "area": "소비자보호", "p": "수석", "d": "소비자지원부", "sd": "완전판매지원팀", "u": "완전판매", "w": " - 완전판매 테마점검제돟 기획 및 운영\n - 완전판매 제재기준 수입 및 운영, 지침 개정 관리\n - 완전판매 하이플래너 제재 및 지침 관리\n - 통계자료 관리(부서 통계표 등)\n - 금융감독원 CPC자료 작성 및 대응", "a": "엄운섭", "empNo": "306448", "grp": "소비자", "fax": "0507-770-2200", "email": "jyc0316@hi.co.kr"}, {"tel": "02-2116-1206", "n": "박정민", "area": "인수/심사", "p": "수석", "d": "일반UW지원파트", "sd": "", "u": "", "w": " - 인수심사\n  └ 화재보험(주택화재보험, 일반화재보험, 공장화재보험)\n  └ 재물보험(하이기업종합플럿, 하이비즈재산종합보험, 국문동산종합보험 등)\n  └ 책임보험(영업배상, 생산물배상 등), 상해보험(단체상해), 근재보험(국내근재, 해외근재)\n  └ 담당 : [AM] 강북AM, 경기AM, [개인] 강남지역단, 성남지역단, 전북지역단, [TM][CM]\n - 일반보험 공통 전산 시스템 유지 관리(단, 보통상해 / 단체상해 / 여행자보험은 특종UW파트)", "a": "", "empNo": "306989", "grp": "일반보험", "fax": "0507-770-2396", "email": "riverike@hi.co.kr"}, {"tel": "02-3701-8324", "n": "이석부", "area": "인수/심사", "p": "수석", "d": "해상업무파트", "sd": "", "u": "", "w": " - 항공상품 인수심사 및 재보험 요율 산출\n  └ 담당 : [개인][AM] (※경량항공기배상책임보험 제외)", "a": "", "empNo": "307709", "grp": "일반보험", "fax": "0507-770-2696", "email": "seok@hi.co.kr"}, {"tel": "02-6744-1594", "n": "김수희", "area": "소비자보호", "p": "대리", "d": "소비자지원부", "sd": "고객서비스지원팀", "u": "고객서비스", "w": " - 소비자보호센터 : 운영관리, 교육지원, 소보실장 평가, 신속민원처리, 통계 관리 등\n - 메타엠콜센터 : 위탁 운영관리 및 안정적 콜센터 운영 위한 컨틴전시 플랜 개선 운영", "a": "남형무", "empNo": "307851", "grp": "소비자", "fax": "0507-770-2761", "email": ""}, {"tel": "02-2116-1206", "n": "전홍채", "area": "인수/심사", "p": "수석", "d": "일반UW지원파트", "sd": "", "u": "", "w": " - 인수심사\n  └ 화재보험(주택화재보험, 일반화재보험, 공장화재보험)\n  └ 재물보험(하이기업종합플럿, 하이비즈재산종합보험, 국문동산종합보험 등)\n  └ 책임보험(영업배상, 생산물배상 등), 상해보험(단체상해), 근재보험(국내근재, 해외근재)\n  └ 담당 : [AM] 서초AM, 호남AM, 제휴, 방카 [개인] 강서지역단, 강원지역단\n- 일반보험 공통 전산 시스템 유지 관리(단, 보통상해 / 단체상해 / 여행자보험은 특종UW파트)", "a": "", "empNo": "308027", "grp": "일반보험", "fax": "0507-770-2840", "email": "jhc1228@hi.co.kr"}, {"tel": "02-6744-1598", "n": "김혜숙", "area": "소비자보호", "p": "선임", "d": "소비자지원부", "sd": "고객서비스지원팀", "u": "고객서비스", "w": " - 콜센터 장기 제환급\n - 콜센터 착오안내접수\n - 메타엠 콜센터 지원 및 통계관리\n - 제도개선", "a": "조민재", "empNo": "308086", "grp": "소비자", "fax": "0507-770-2870", "email": "idreamxx@hi.co.kr"}, {"tel": "02-6744-1591", "n": "금지현", "area": "소비자보호", "p": "대리", "d": "소비자지원부", "sd": "완전판매지원팀", "u": "완전판매", "w": " - TM계약 QA업무\n - 상담녹취 검수\n - 완전판매 제고를 위한 검수기준 수립\n - 상담원 교육\n -  장기_부실계약 관리 (자필 미실시)", "a": "", "empNo": "308216", "grp": "소비자", "fax": "0507-770-2922", "email": ""}, {"tel": "02-3701-8360", "n": "박준호", "area": "인수/심사", "p": "부장", "d": "특종UW파트", "sd": "", "u": "", "w": " - 상해보험(보통상해, 여행자보험) 인수심사 및 전산 시스템 유지 관리", "a": "", "empNo": "308784", "grp": "일반보험", "fax": "0507-770-3195", "email": "junho_park@hi.co.kr"}, {"tel": "02-3701-8341", "n": "한상민", "area": "인수/심사", "p": "차장", "d": "재물UW파트", "sd": "", "u": "", "w": " - 인수심사 및 재보험 요율 산출\n  └ 재물 : 재산종합보험(Package Inurance Policy), 테러보험(Terror Insurance Policy)\n  └ 방송종합보험(Commercial Insurance Coverage for Broadcasters)\n  └  담당 : 재물 [개인], 방송종합 [개인][AM]", "a": "", "empNo": "309295", "grp": "일반보험", "fax": "0507-770-3462", "email": "mildsieben@hi.co.kr"}, {"tel": "02-6744-1595", "n": "신지혜", "area": "소비자보호", "p": "선임", "d": "소비자지원부", "sd": "고객서비스지원팀", "u": "고객서비스", "w": " - 고객콜센터 위탁 운영관리, 안내기준 수립, 콜센터 통계 관리등\n - ARS, 콜센터 업무시스템 운영 및 관리 (하이콜, WFM, 채팅상담, KMS등) ", "a": "전신유", "empNo": "310387", "grp": "소비자", "fax": "0507-770-3883", "email": "rabbiy2918@hi.co.kr"}, {"tel": "02-3701-8335", "n": "김가영", "area": "인수/심사", "p": "과장", "d": "재물UW파트", "sd": "", "u": "", "w": " - 인수심사 및 재보험 요율 산출\n  └ 재물 : 박물관종합보험(Commercial Insurance for Museum & Cultural Institution)\n  └ 담당 : [개인][AM] ", "a": "", "empNo": "310524", "grp": "일반보험", "fax": "0507-770-0028", "email": "kykim@hi.co.kr"}, {"tel": "02-3701-8350", "n": "고은정", "area": "인수/심사", "p": "과장", "d": "재물UW파트", "sd": "", "u": "", "w": " - 인수심사 및 재보험 요율 산출\n  └ 재물 : 영문동산종합보험(American Standard Inland Floater Insurance Policy)\n  └ Railway Rolling Stock Insurance\n  └ 담당 : [개인][AM]", "a": "", "empNo": "311034", "grp": "일반보험", "fax": "0507-770-0191", "email": "ej_koh@hi.co.kr"}, {"tel": "02-3701-8342", "n": "김푸름", "area": "인수/심사", "p": "과장", "d": "특종UW파트", "sd": "", "u": "", "w": " - 책임보험 인수심사 및 재보험 요율 산출 \n  └ 책임 : 영업배상, 생산물배상, 기타전문인배상, 임원배상, 기업중대사고배상\n  └ 담당 : [개인] 강북지역단 \n - 법률비용보상보험, 약정이행보험, 부동산RVI, 리콜보험 인수심사 및 재보험 요율 산출\n  └ 담당 : [개인][AM] ", "a": "", "empNo": "311055", "grp": "일반보험", "fax": "0507-770-0355", "email": "evergreen1@hi.co.kr"}, {"tel": "02-6744-1593", "n": "전신유", "area": "소비자보호", "p": "수석", "d": "소비자지원부", "sd": "고객서비스지원팀", "u": "고객서비스", "w": " - 콜센터 주요이슈 관리 및 비상대응계획 관리\n - 하이카콜센터 위탁업무 관리\n - 콜센터시스템(하이콜 등) 운영관리 (권한, 전산개발 등)", "a": "", "empNo": "311452", "grp": "소비자", "fax": "0507-770-0705", "email": "jsayes@hi.co.kr"}, {"tel": "02-6744-1585", "n": "조우성", "area": "소비자보호", "p": "대리", "d": "소비자지원부", "sd": "완전판매지원팀", "u": "완전판매", "w": " - 완전판매 전산시스템 관리\n - 완전판매 모니터링 제도 운영\n - 음성봇 완전판매 모니터링 관리\n - e모니터링 시스템, 알림톡 운영 관리\n - 해피콜 가이드라인 담당\n - 완전판매 모니터링 스크립트 관리, 완전판매 모니터링 업무매뉴얼 관리\n - 콜센터 아웃콜 요청, 모니터링 조력제도, 특인요청 검토 담당", "a": "장윤창", "empNo": "312131", "grp": "소비자", "fax": "0507-770-0897", "email": "cwsvv@hi.co.kr"}, {"tel": "02-6744-1596", "n": "조민재", "area": "소비자보호", "p": "전임", "d": "소비자지원부", "sd": "고객서비스지원팀", "u": "고객서비스", "w": " - 고객지원팀 제환급\n - 창구응대모니터링", "a": "", "empNo": "312241", "grp": "소비자", "fax": "0507-739-6779", "email": "minjae_@hi.co.kr"}, {"tel": "02-3701-8316", "n": "최지원", "area": "인수/심사", "p": "대리", "d": "해상업무파트", "sd": "", "u": "", "w": " - 항공상품 인수심사 및 재보험 요율 산출\n  └ 담당 : [개인][AM] (※경량항공기배상책임보험 제외)", "a": "", "empNo": "312282", "grp": "일반보험", "fax": "0507-739-6820", "email": "zwon1225@hi.co.kr"}, {"tel": "02-3701-8352", "n": "김희윤", "area": "인수/심사", "p": "대리", "d": "특종UW파트", "sd": "", "u": "", "w": " - 책임보험 인수심사 및 재보험 요율 산출\n  └ 책임 : 영업배상, 생산물배상, 기타전문인배상, 임원배상, 기업중대사고배상\n  └ 담당 :[AM] AM1본부, AM2본부, [전략], [개인] 강서지역단, 강남지역단, 북부지역단 \n - 권리보험 인수심사 및 재보험 요율 산출\n  └ 담당 : [개인][AM]", "a": "", "empNo": "312329", "grp": "일반보험", "fax": "0507-739-6990", "email": "heeyoonkim@hi.co.kr"}, {"tel": "02-3701-8347", "n": "우지혜", "area": "인수/심사", "p": "대리", "d": "재물UW파트", "sd": "", "u": "", "w": " - 인수심사 및 재보험 요율 산출\n  └ 기술 : 건설공사보험(CAR), 조립보험(EAR), 완성토목공사물보험(CCAR), 기계보험(MB), \n                  전자기기보험(EEI), 영문 중장비안전보험(CPE / CPI) \n  └ 담당 : [개인][AM] ", "a": "", "empNo": "313051", "grp": "일반보험", "fax": "0507-770-0247", "email": "jhwoo@hi.co.kr"}, {"tel": "02-3701-8351", "n": "한준표", "area": "인수/심사", "p": "대리", "d": "특종UW파트", "sd": "", "u": "", "w": " - 책임보험 인수심사 및 재보험 요율 산출\n  └ 책임 : 영업배상, 생산물배상, 기타전문인배상, 임원배상, 기업중대사고배상\n  └ 담당 : [개인] 경기지역단, 성남지역단, 경인지역단, 강원지역단\n - 사이버보험인수심사 및 재보험 요율 산출\n  └ 사이버 : 사이버패키지, 딥테크종합 \n     (※개인정보보호배상, 전자금융거래배상 등 책임 상품은 각 채널 담당자)\n  └ 담당 : [개인][AM]", "a": "", "empNo": "313290", "grp": "일반보험", "fax": "0507-770-1005", "email": "jphan@hi.co.kr"}, {"tel": "02-3701-3698", "n": "이혜지", "area": "인수/심사", "p": "선임", "d": "특종UW파트", "sd": "", "u": "", "w": " - 책임보험 인수심사 및 재보험 요율 산출\n  └ 책임 : 영업배상, 생산물배상, 기타전문인배상, 임원배상, 기업중대사고배상\n  └ 담당 : [개인] 중부지역단, 충청지역단, 호남지역단, 전북지역단", "a": "", "empNo": "313336", "grp": "일반보험", "fax": "0507-770-0452", "email": "hj729@hi.co.kr"}, {"tel": "02-3701-8345", "n": "최해리", "area": "인수/심사", "p": "선임", "d": "재물UW파트", "sd": "", "u": "", "w": " - 인수심사 및 재보험 요율 산출\n  └ 재물 : 재산종합보험(Package Inurance Policy), 테러보험(Terror Insurance Policy)\n  └ 기술 : 기관기계종합보험(CMI)\n  └ 담당 : 재물 [AM], 기술 [개인][AM]", "a": "", "empNo": "313342", "grp": "일반보험", "fax": "0507-770-0712", "email": "haery.choi@hi.co.kr"}, {"tel": "02-3701-8317", "n": "박채원", "area": "인수/심사", "p": "선임", "d": "해상업무파트", "sd": "", "u": "", "w": " - 적하보험 인수심사 및 재보험 요율 산출\n  └ 담당 : [개인][AM]", "a": "", "empNo": "313440", "grp": "일반보험", "fax": "0507-770-0256", "email": "cw.park@hi.co.kr"}, {"tel": "02-3701-8357", "n": "김은하", "area": "인수/심사", "p": "전임", "d": "특종UW파트", "sd": "", "u": "", "w": " - 책임보험 인수심사 및 재보험 요율 산출\n  └ 책임 : 영업배상, 생산물배상, 기타전문인배상, 임원배상, 기업중대사고배상\n  └ 담당 : [개인] 부산지역단, 경남지역단, 영남지역단, 대경지역단, 제주사업부\n - 풍수해보험 인수심사 및 전산 시스템 유지 관리\n  └ 담당 : [개인][AM]\n - 신변안전보험 인수심사 및 재보험 요율 산출\n  └ 담당 : [개인][AM]", "a": "", "empNo": "313588", "grp": "일반보험", "fax": "0507-770-1172", "email": "eunha@hi.co.kr"}, {"tel": "02-3701-8353", "n": "신유미", "area": "인수/심사", "p": "대리", "d": "특종UW파트", "sd": "", "u": "", "w": " - 성능점검책임보험 인수심사\n  └ 담당 : [개인][AM]", "a": "", "empNo": "313703", "grp": "일반보험", "fax": "0507-770-0195", "email": "ym.shin@hi.co.kr"}, {"tel": "02-3701-8329", "n": "김태민", "area": "인수/심사", "p": "전임", "d": "해상업무파트", "sd": "", "u": "", "w": " - 선박보험 인수심사 및 재보험 요율 산출\n  └ 담당 : [개인][AM]\n - 경량항공기배상책임보험 인수심사 및 재보험 요율 산출\n  └ 담당 : [개인][AM] (※드론 의무보험은 특종UW파트 각 채널 담당자)", "a": "", "empNo": "313802", "grp": "일반보험", "fax": "0507-770-1593", "email": "taemink99@hi.co.kr"}, {"tel": "02-3701-3530", "n": "이보미", "area": "마케팅/영업", "p": "차장", "d": "AM마케팅파트", "sd": "", "u": "", "w": " - GA수수료타입 수립 및 개정\n - AM 영업시책비 운영기준 수립 / 개정관리\n - 월별 영업시책비(초년도/2차년도) 운영(안) 수립 / 마감 결과 보고 / 지도점검\n - 인센티브 기준 수립 및 결과 산출 (사업부, 지점, 총무)", "a": "", "empNo": "309507", "grp": "마케팅", "fax": "0507-770-3549", "email": "bomi0403@hi.co.kr"}, {"tel": "02-3701-3531", "n": "윤진훈", "area": "마케팅/영업", "p": "차장", "d": "AM마케팅파트", "sd": "", "u": "", "w": " - 점포 기구 개편(안) 수립 및 유관부서 협의 (신설,폐쇄,이전 등)\n - 연간 목표 수립 (장기신, 조직)\n - 점포평가 기준 수립 및 운영 (부문, 본부, 사업부, 지점)\n -  월별 장기신(인보험) 매출계획 수립 및 진도 관리", "a": "", "empNo": "309733", "grp": "마케팅", "fax": "0507-770-3652", "email": "yjhrock84@hi.co.kr"}, {"tel": "02-3701-3532", "n": "고경원", "area": "마케팅/영업", "p": "대리", "d": "AM마케팅파트", "sd": "", "u": "", "w": " - AM부문 인력 운영 관리(휴복직,총무T/O) 및 통계 관리\n - 연간 목표 수립 (자동차)\n - 월별 자동차보험  일별 계획 수립 / 진도 관리 / 지표 관리 / 활성화 방안 수립\n - 자동차代 파트너쉽 행사 기획 운영/ 결과 보고\n - 점포평가 기준 수립 및 운영 (총무)", "a": "", "empNo": "309039", "grp": "마케팅", "fax": "0507-770-3316", "email": "kywon33@hi.co.kr"}, {"tel": "02-3701-3537", "n": "최성진", "area": "마케팅/영업", "p": "선임", "d": "AM마케팅파트", "sd": "", "u": "", "w": " - GA代2차년 영업시책비 운영(예산시뮬, 시상 개발등) 및 환수 업무\n - 연간 목표 수립 (장기 계속)\n - 월간 점포간 목표 조정  (매출,조직 등 평가지표) 및 검증\n - 점포별 일일실적 진도관리 (장기,자동차,유실적)\n - 대리점별 매출 진도 관리 (전략GA 등)", "a": "", "empNo": "313341", "grp": "마케팅", "fax": "0507-770-0615", "email": "csj1805@hi.co.kr"}, {"tel": "02-3701-3535", "n": "박서인", "area": "마케팅/영업", "p": "선임", "d": "AM마케팅파트", "sd": "", "u": "", "w": " - 일반보험서포터 선·해임, 수수료 / 평가기준 / 매출 관리\n - GA代2차년 영업시책비 운영(예산시뮬, 시상 개발등) 및 환수 업무\n - 시책(초년도) 진도 현황 공지 업무\n - 연간 목표 수립 (일반보험)\n - 일반보험 매출 관리 (만기 갱신관리, 고액건 관리 포함)", "a": "", "empNo": "310380", "grp": "마케팅", "fax": "0507-770-3876", "email": "phj1011@hi.co.kr"}, {"tel": "02-3701-3536", "n": "여승준", "area": "마케팅/영업", "p": "선임", "d": "AM마케팅파트", "sd": "", "u": "", "w": " - 영업시책비(2차년도) 진도 현황 공지 및 집행 / 마감 결과 보고\n - 하이클래스(우수GA설계사) 운영(안) 수립 / 마감 결과 보고\n - 마감보고 / 직원현황 / 지경협(대형代) 바인더 업데이트 관리", "a": "", "empNo": "313326", "grp": "마케팅", "fax": "0507-770-0064", "email": "sjyeo0610@hi.co.kr"}, {"tel": "02-3701-3551", "n": "이명섭", "area": "마케팅/영업", "p": "차장", "d": "AM교육파트", "sd": "", "u": "매니저운영", "w": " - 영업지원기준안(매니저편) 수립 및 개정 관리\n - 매니저 영업활성화 시상 운영 (기준수립 및 진도공지)\n - 매니저 연도대상 기준안 수립 및 진도 공지", "a": "방성현", "empNo": "309279", "grp": "마케팅", "fax": "0507-770-3449", "email": ""}, {"tel": "02-3701-3543", "n": "나지영", "area": "마케팅/영업", "p": "과장", "d": "AM교육파트", "sd": "", "u": "매니저운영", "w": " - 매니저 선임/해임 및 현황관리\n - 매니저 연도대상 행사 준비\n - 신입매니저 운영 전반 (선발, 교육진행, 사후관리)\n - 부서서무 (사업비 처리 포함)", "a": "", "empNo": "308344", "grp": "마케팅", "fax": "0507-770-2987", "email": "idnaji@hi.co.kr"}, {"tel": "02-3701-3544", "n": "방성현", "area": "마케팅/영업", "p": "전임", "d": "AM교육파트", "sd": "", "u": "매니저운영", "w": " - 영업지원기준안(매니저편) 수립 및 개정 관리\n - 매니저 영업활성화 시상 운영 (기준수립 및 진도공지)\n - 매니저 연도대상 기준안 수립 및 진도 공지", "a": "이명섭", "empNo": "313812", "grp": "마케팅", "fax": "0507-770-1632", "email": "tjdgus0337@hi.co.kr"}, {"tel": "02-3701-3546", "n": "최은영", "area": "마케팅/영업", "p": "차장", "d": "AM교육파트", "sd": "", "u": "교육기획/지원", "w": " - AM부문 교육 체계 수립\n - 교육예산(안) 수립/관리/집행\n - 직원교육 계획수립 및 진행 (팀장, 지점장, 채널실장, 총무)", "a": "", "empNo": "313756", "grp": "마케팅", "fax": "0507-770-1469", "email": "ceybigtree@hi.co.kr"}, {"tel": "02-3701-3547", "n": "김동석", "area": "마케팅/영업", "p": "책임연구원", "d": "AM교육파트", "sd": "", "u": "교육기획/지원", "w": " - GA 전문/테마과정 운영/진행\n - 하이캐스트, 전략외전략 등 영업전략 방송 제작", "a": "선혜라", "empNo": "313760", "grp": "마케팅", "fax": "0507-770-0415", "email": "dean1115@hi.co.kr"}, {"tel": "02-3701-3548", "n": "선혜라", "area": "마케팅/영업", "p": "선임연구원", "d": "AM교육파트", "sd": "", "u": "교육기획/지원", "w": " - GA 전문/테마과정 운영/진행\n - 하이캐스트, 전략외전략 등 영업전략 방송 제작", "a": "김동석", "empNo": "313772", "grp": "마케팅", "fax": "0507-770-1437", "email": "hrseon786@hi.co.kr"}, {"tel": "02-3701-3541", "n": "하선주", "area": "마케팅/영업", "p": "과장", "d": "AM교육파트", "sd": "", "u": "판매전략수립", "w": " - GA매거진, 영업전략 제작/배포\n - 타사 교육자료 확보 및 주요사항 보고\n - AM본부 추천플랜 등재\n - 점포장 컨퍼런스 기획 및 영업전략 교육\n - 채널실장 평가기준 수립 및 진도공지\n - 보험대리점협회 비교안내 상품등록", "a": "신동아", "empNo": "305324", "grp": "마케팅", "fax": "0507-770-1780", "email": "rose21@hi.co.kr"}, {"tel": "02-3701-3542", "n": "신동아", "area": "마케팅/영업", "p": "차장", "d": "AM교육파트", "sd": "", "u": "판매전략수립", "w": " - GA매거진, 영업전략 제작/배포\n - 타사 교육자료 확보 및 주요사항 보고\n - AM본부 추천플랜 등재\n - 점포장 컨퍼런스 기획 및 영업전략 교육", "a": "하선주", "empNo": "311072", "grp": "마케팅", "fax": "0507-770-0462", "email": "eastasia@hi.co.kr"}, {"tel": "02-3701-3552", "n": "김연태", "area": "마케팅/영업", "p": "수석", "d": "AM지원파트", "sd": "", "u": "", "w": " - 금감원/손보협회 등 대외기관 요청자료 작성 등 대응\n - 유의계약 현황 관리 및 탈락계약의 평가차감 데이터 산출\n - 심사우대/관리플래너 협의(하이플래너 제재심의 / 심사완화)\n - 장기,자동차 구상심의 관리\n - 완전판매 관련 제재 및 대상건 관리", "a": "", "empNo": "304736", "grp": "마케팅", "fax": "0507-770-1606", "email": "kytks@hi.co.kr"}, {"tel": "02-3701-3554", "n": "권경미", "area": "마케팅/영업", "p": "차장", "d": "AM지원파트", "sd": "", "u": "", "w": " - 「제3자 리스크관리 가이드 라인」 관련 업무\n - 점포운영기준 및 GA운영기준 수립 / 개정 관리\n - 채권관리, 수수료 지급 / 지급보류 / 해제 심사\n - AM본부 미수 수당·수수료 회수 관리 및 조정심사", "a": "", "empNo": "307197", "grp": "마케팅", "fax": "0507-770-2464", "email": "kkm0901@hi.co.kr"}, {"tel": "032-452-0645", "n": "김혜영", "area": "마케팅/영업", "p": "선임", "d": "AM지원파트", "sd": "", "u": "", "w": " - 파트너지점, 영업점 (영지안, 예산수립, 매출, 시상) 관리 및 운영 총괄\n - 파트너지점, 영업점 (매출, 조직) 현황공지 및 통계업무\n - AM영업점 / 전환법인 (체결, 갱신, 계약해지) 관리 및 운영", "a": "", "empNo": "309629", "grp": "마케팅", "fax": "0507-770-3595", "email": "kira2580@hi.co.kr"}, {"tel": "02-3701-3556", "n": "김인혜", "area": "마케팅/영업", "p": "선임", "d": "AM지원파트", "sd": "", "u": "", "w": " - 점포운영비 영업지원기준(안) / 관리지침 수립 및 본사 협의\n - 산하 점포의 점포운영비 지도점검\n - 지사 / 유자격자 위촉 및 대리점 소속 변경, 원격지 지사 정비\n - GA 대리점 / 설계사 및 교차설계사 제반 인사관리 (제재/우수인증/특성변경 등)", "a": "", "empNo": "310373", "grp": "마케팅", "fax": "0507-770-3869", "email": "ohoh0221@hi.co.kr"}, {"tel": "02-3701-3553", "n": "이소희", "area": "마케팅/영업", "p": "전임", "d": "AM지원파트", "sd": "", "u": "", "w": " - 시험 관리(GA, 파트너)  T/O 배분 및 접수 마감관리\n - 합격 및 위촉 통계관리 (파트너), 웰컴포인트(GA설계사) 운영 관리\n - GA代 제공 제정보 관리 및 운영 (공시업무 포함)\n - 대리점 임차, 집기, 전산 지원 검토 및 효율 관리 \n - 선지급 보증(파트너, 非GA) : 갱신, 증액, 지급보류 관리", "a": "", "empNo": "311770", "grp": "마케팅", "fax": "0507-770-0385", "email": "sh311770@hi.co.kr"}, {"tel": "02-3701-3312", "n": "김민환", "area": "마케팅/영업", "p": "수석", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 신인도입 전략 및 시상안 수립\n - 신인도입 기네스 및 도입우수점포 감사행사 기획 실시\n - 신인도입 및 조직육성 관련 회의, 보고자료, 점포점검관리", "a": "", "empNo": "308762", "grp": "마케팅", "fax": "0507-770-3177", "email": "kim_minhwan@hi.co.kr"}, {"tel": "02-3701-3314", "n": "신광현", "area": "마케팅/영업", "p": "차장", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 매출목표 배분 총괄 (일반,장기,자동차 목표배분),  \n - CSM, ALM 관련지표 평가기준 수립 및 진도관리\n - 임원회의자료, 월 마감 피드백자료", "a": "", "empNo": "309721", "grp": "마케팅", "fax": "0507-770-3643", "email": "hihyun@hi.co.kr"}, {"tel": "02-3701-3315", "n": "최영락", "area": "마케팅/영업", "p": "차장", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 영업시책 수립 및 집행 관리 총괄, \n - 신상품 전략 및 진도관리", "a": "", "empNo": "309749", "grp": "마케팅", "fax": "0507-770-3665", "email": ""}, {"tel": "02-3701-3309", "n": "김순호", "area": "마케팅/영업", "p": "과장", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 점포평가 기준 수립 및 결과산출 (미수평가, 유의계약관리평가), \n - 개인부문 연도대상 \n - 매출관련 효율지표 관리(유지율, 집금률 등)", "a": "", "empNo": "310120", "grp": "마케팅", "fax": "0507-770-3780", "email": "sunho0615@hi.co.kr"}, {"tel": "02-3701-3316", "n": "정성엽", "area": "마케팅/영업", "p": "과장", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 점포운영기준 수립(CPA, TC, 교차, 지역전문 등)  \n - TC지점 기획 및 점포운영 관리 (평가기준, 목표, 시상안 등)\n - 지역단 DB지원", "a": "", "empNo": "310173", "grp": "마케팅", "fax": "0507-770-3825", "email": "olleh@hi.co.kr"}, {"tel": "02-3701-3307", "n": "정상훈", "area": "마케팅/영업", "p": "과장", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 자동차 달성전략, 매출분석 보고, \n - 자동차 시책 운영, \n - 민원, 내부통제위원회 회의자료, 민원유관부서장회의자료\n - 플래너제재, 심사관리플래너, 보험사기 등", "a": "", "empNo": "312115", "grp": "마케팅", "fax": "0507-770-0881", "email": "jshstormy@hi.co.kr"}, {"tel": "02-3701-3313", "n": "이재상", "area": "마케팅/영업", "p": "과장", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 드림영업실 기획 및 운영\n - 드림영업실 소속변경 및 보유계약 관리(플래너 해촉)", "a": "", "empNo": "311547", "grp": "마케팅", "fax": "0507-770-0132", "email": "ljs2014@hi.co.kr"}, {"tel": "02-3701-3305", "n": "강민성", "area": "마케팅/영업", "p": "과장", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 신인도입 시상 집행\n - 도입육성 목표 수립 및 배분 (합격, 위촉, 환산60 등)\n - 육성리더 (영업팀장, SM) 기획 및 운영관리", "a": "", "empNo": "311511", "grp": "마케팅", "fax": "0507-770-3978", "email": "kms2936@hi.co.kr"}, {"tel": "02-3701-3306", "n": "남윤희", "area": "마케팅/영업", "p": "과장", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 인센티브 기준 수림\n - 신인도입 아너스제도 운영\n - 하이플래너 제재등록 및 관리(GA이탈)", "a": "", "empNo": "311527", "grp": "마케팅", "fax": "0507-770-3994", "email": "yhnam2014@hi.co.kr"}, {"tel": "02-3701-3308", "n": "이민정", "area": "마케팅/영업", "p": "과장", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 지역단장 회의자료\n - 점포관리자 간담회(연도우수 지점장, 우수총무)\n - 일반보험 매출분석 일반보험리더 운영 관리\n - 미스터리쇼핑 현장 안내 및 결과 관리", "a": "", "empNo": "311543", "grp": "마케팅", "fax": "0507-770-0124", "email": "lmj1112@hi.co.kr"}, {"tel": "02-3701-3376", "n": "정아영", "area": "마케팅/영업", "p": "선임", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 설계사 수험 접수 및 합격자 검증\n - 지역단 면접진도 일일공지\n - 입문교육 출결현황 관리 및 공지\n - 퍼스티 입교 및 출결현황 관리 및 공지\n - 모집종사자 보수교육 운영·관리", "a": "", "empNo": "311776", "grp": "마케팅", "fax": "0507-770-0417", "email": "yeong2@hi.co.kr"}, {"tel": "02-3701-3375", "n": "박미진", "area": "마케팅/영업", "p": "선임", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 선지급 보증보험 심사관리(신규,만기,증액,감액),  \n - 미수 반제, \n - 비례형전환 심사\n - 청구프로세스 개선 업무지원", "a": "", "empNo": "310030", "grp": "마케팅", "fax": "0507-770-3735", "email": "pmj310030@hi.co.kr"}, {"tel": "02-3701-3374", "n": "한민규", "area": "마케팅/영업", "p": "선임", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 영업시책 진도 관리 / 운영\n - 매출목표 배분 산출, 점포평가 결과 산출 ", "a": "", "empNo": "313344", "grp": "마케팅", "fax": "0507-770-0794", "email": "hmg0605@hi.co.kr"}, {"tel": "02-3701-3373", "n": "김재민", "area": "마케팅/영업", "p": "전임", "d": "개인영업지원파트", "sd": "", "u": "", "w": " - 영업시책 진도 관리 / 운영", "a": "", "empNo": "313796", "grp": "마케팅", "fax": "0507-770-1585", "email": "jm.kim@hi.co.kr"}, {"tel": "02-3701-8262", "n": "심동곤", "area": "소비자보호", "p": "수석", "d": "소비자권익보호부", "sd": "분쟁조정1팀", "u": "", "w": "- 분쟁조정1팀(제3보험, 일반보험, 펫보험, 중고차성능상태점검 보험 등) 총괄\n- 답변서 결재 및 금감원 대응 및 소통협력 강화\n- 의료자문관리위원회 관리\n- 제3보험 일반보험 보험금분쟁심의위원회 운영", "a": "오진원", "empNo": "307958", "grp": "소비자", "fax": "0507-770-2815", "email": "simson74@hi.co.kr"}, {"tel": "02-3701-8266", "n": "오진원", "area": "소비자보호", "p": "수석", "d": "소비자권익보호부", "sd": "분쟁조정2팀", "u": "", "w": "- 분쟁조정2팀( 영업, 자동차(인물), 개인정보 및 기타 민원) 총괄\n- 답변서 결재 및 금감원 대응 업무 등\n- 자동차 보험금분쟁심의위원회 운영", "a": "심동곤", "empNo": "308304", "grp": "소비자", "fax": "0507-770-2964", "email": "jino@hi.co.kr"}, {"tel": "02-3701-8219", "n": "주광명", "area": "소비자보호", "p": "수석", "d": "소비자권익보호부", "sd": "분쟁조정1팀", "u": "", "w": " - 금감원 대응 키맨\n - 보험금분쟁심의실무협의회\n - 하이플래너 제재, 현장소통공간 담당(정)", "a": "김수옥", "empNo": "308989", "grp": "소비자", "fax": "0507-770-3287", "email": "jude20c@hi.co.kr"}, {"tel": "02-3701-8267", "n": "김수옥", "area": "소비자보호", "p": "대리", "d": "소비자권익보호부", "sd": "분쟁조정1팀", "u": "", "w": " - 대외민원 분배\n - 대외기관 요청자료 대응\n - 금융감독원 핫라인 관리\n - 내방민원 담당\n - 현장소통공간 담당(부)  ", "a": "주광명", "empNo": "309042", "grp": "소비자", "fax": "0507-770-3319", "email": "corn0123@hi.co.kr"}, {"tel": "02-3701-8645", "n": "김성철", "area": "소비자보호", "p": "수석", "d": "소비자권익보호부", "sd": "분쟁조정1팀", "u": "", "w": "- 대외민원 분배(분쟁조정1팀: 장기, 일반, 배책 등)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "노주희", "empNo": "304202", "grp": "소비자", "fax": "0507-770-1450", "email": "charisma@hi.co.kr"}, {"tel": "02-3701-8258", "n": "노주희", "area": "소비자보호", "p": "과장", "d": "소비자권익보호부", "sd": "분쟁조정1팀", "u": "", "w": "- 대외민원 분배(분쟁조정1팀: 장기, 운전자, 실손)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "유영재", "empNo": "305986", "grp": "소비자", "fax": "0507-770-2036", "email": "jurry08@hi.co.kr"}, {"tel": "02-3701-8223", "n": "김현", "area": "소비자보호", "p": "수석", "d": "소비자권익보호부", "sd": "분쟁조정1팀", "u": "", "w": "- 대외민원 분배(분쟁조정1팀: 일반, 배책 등)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "임지민", "empNo": "308466", "grp": "소비자", "fax": "0507-770-3058", "email": "kidrock@hi.co.kr"}, {"tel": "02-3701-8226", "n": "김영철", "area": "소비자보호", "p": "수석", "d": "소비자권익보호부", "sd": "분쟁조정1팀", "u": "", "w": "- 대외민원 분배(분쟁조정1팀: 장기, 운전자, 실손)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "김성철", "empNo": "304234", "grp": "소비자", "fax": "0507-770-1462", "email": "hdkyc@hi.co.kr"}, {"tel": "02-3701-8222", "n": "박수현", "area": "소비자보호", "p": "대리", "d": "소비자권익보호부", "sd": "분쟁조정1팀", "u": "", "w": "- 대외민원 분배(분쟁조정1팀: 장기, 운전자, 실손)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "박진아", "empNo": "313905", "grp": "소비자", "fax": "0507-739-7221", "email": ""}, {"tel": "", "n": "박진아", "area": "소비자보호", "p": "대리", "d": "소비자권익보호부", "sd": "분쟁조정1팀", "u": "", "w": "- 대외민원 분배(분쟁조정1팀: 장기, 운전자, 실손)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "박수현", "empNo": "313907", "grp": "소비자", "fax": "0507-739-6978", "email": ""}, {"tel": "02-3701-8265", "n": "유영재", "area": "소비자보호", "p": "대리", "d": "소비자권익보호부", "sd": "분쟁조정1팀", "u": "", "w": "- 대외민원 분배(분쟁조정1팀: 장기, 운전자, 실손)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "김성철", "empNo": "313910", "grp": "소비자", "fax": "0507-739-7039", "email": ""}, {"tel": "", "n": "임지민", "area": "소비자보호", "p": "대리", "d": "소비자권익보호부", "sd": "분쟁조정1팀", "u": "", "w": "- 대외민원 분배(분쟁조정1팀: 일반, 배책 등)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "김현", "empNo": "313917", "grp": "소비자", "fax": "0507-739-7396", "email": ""}, {"tel": "02-3701-8642", "n": "주진영", "area": "소비자보호", "p": "수석", "d": "소비자권익보호부", "sd": "분쟁조정2팀", "u": "", "w": "- 대외민원 분배(분쟁조정2팀: 영업, 자동차, 개인정보 등 기타)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "김병갑", "empNo": "304547", "grp": "소비자", "fax": "0507-770-1548", "email": ""}, {"tel": "02-3701-8996", "n": "금영훈", "area": "소비자보호", "p": "수석", "d": "소비자권익보호부", "sd": "분쟁조정2팀", "u": "", "w": "- 대외민원 분배(분쟁조정3팀: 영업, 자동차, 개인정보 등 기타)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "장동연", "empNo": "304660", "grp": "소비자", "fax": "0507-770-1577", "email": "kyh1967@hi.co.kr"}, {"tel": "02-3701-3380", "n": "장동연", "area": "소비자보호", "p": "수석", "d": "소비자권익보호부", "sd": "분쟁조정2팀", "u": "", "w": "- 대외민원 분배(분쟁조정4팀: 영업, 자동차, 개인정보 등 기타)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "금영훈", "empNo": "304812", "grp": "소비자", "fax": "0507-770-1641", "email": "jjang@hi.co.kr"}, {"tel": "02-3701-8234", "n": "김병갑", "area": "소비자보호", "p": "수석", "d": "소비자권익보호부", "sd": "분쟁조정2팀", "u": "", "w": "- 대외민원 분배(분쟁조정5팀: 영업, 자동차, 개인정보 등 기타)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "주진영", "empNo": "305788", "grp": "소비자", "fax": "0507-770-1965", "email": "cchiwoo@hi.co.kr"}, {"tel": "02-3701-8257", "n": "오봉민", "area": "소비자보호", "p": "수석", "d": "소비자권익보호부", "sd": "분쟁조정2팀", "u": "", "w": "- 대외민원 분배(분쟁조정6팀: 영업, 자동차, 개인정보 등 기타)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "전영욱", "empNo": "306481", "grp": "소비자", "fax": "0507-770-2213", "email": "obmok@hi.co.kr"}, {"tel": "02-3701-8640", "n": "장루시", "area": "소비자보호", "p": "과장", "d": "소비자권익보호부", "sd": "분쟁조정2팀", "u": "", "w": "- 대외민원 분배(분쟁조정7팀: 영업, 자동차, 개인정보 등 기타)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "오봉민", "empNo": "306308", "grp": "소비자", "fax": "0507-770-2144", "email": "jlucy00@hi.co.kr"}, {"tel": "02-3701-8648", "n": "전영욱", "area": "소비자보호", "p": "선임", "d": "소비자권익보호부", "sd": "분쟁조정2팀", "u": "", "w": "- 대외민원 분배(분쟁조정8팀: 영업, 자동차, 개인정보 등 기타)\n- 대외민원 답변서 작성\n- 금감원 민원대응", "a": "장루시", "empNo": "305232", "grp": "소비자", "fax": "0507-770-1755", "email": "cyoung232@hi.co.kr"}, {"tel": "02-3701-8236", "n": "홍준규", "area": "소비자보호", "p": "전임", "d": "소비자기획파트", "sd": "", "u": "", "w": "- HI-VOC시스템 운영 및 관리\n- 대내민원, 대외민원 평가", "a": "온재현", "empNo": "313645", "grp": "소비자", "fax": "0507-770-1293", "email": "jkhong@hi.co.kr"}, {"tel": "02-3701-3190", "n": "정규민", "area": "손해사정", "p": "차장", "d": "장기손사지원파트", "sd": "", "u": "", "w": "- 사업계획, 전략수립, 보고서 작성, 회의자료 작성/취합\n- (위탁법인관리) 기획·운영 총괄", "a": "", "empNo": "313127", "grp": "장기손사", "fax": "0507-770-6011", "email": "kyumin@hi.co.kr"}, {"tel": "02-3701-3174", "n": "함지애", "area": "손해사정", "p": "차장", "d": "장기손사지원파트", "sd": "", "u": "", "w": "- 신상품 검토, 보험사기영향평가, 신상품 전산 개발 협조\n- 소송 프로세스 기획· 운영\n- 외부요청자료 작성(CPC, 협회 등)", "a": "", "empNo": "313365", "grp": "장기손사", "fax": "0507-071-0651", "email": "jiae.ham@hi.co.kr"}, {"tel": "02-3701-3179", "n": "김규채", "area": "손해사정", "p": "과장", "d": "장기손사지원파트", "sd": "", "u": "", "w": "- 물보험 / 서베이 법인 지표관리 및 보고\n- 손해사정사 관련 운영 및 관리", "a": "", "empNo": "311932", "grp": "장기손사", "fax": "0507-770-0640", "email": "gckim@hi.co.kr"}, {"tel": "02-3701-3165", "n": "황소희", "area": "손해사정", "p": "과장", "d": "장기손사지원파트", "sd": "", "u": "", "w": "- 지급사유 준수율 지표관리 및 보고", "a": "", "empNo": "313129", "grp": "장기손사", "fax": "0507-770-6015", "email": ""}, {"tel": "02-3701-3191", "n": "김영범", "area": "손해사정", "p": "대리", "d": "장기손사지원파트", "sd": "", "u": "", "w": "- 서면심사(인)/접수입력법인 성과·배당 관리\n- 통계, 전산 지원", "a": "", "empNo": "312752", "grp": "장기손사", "fax": "0507-739-7226", "email": "bbangbeom@hi.co.kr"}, {"tel": "02-3701-3192", "n": "김민정", "area": "손해사정", "p": "선임", "d": "장기손사지원파트", "sd": "", "u": "", "w": "- 통계(민원현황)\n- CS 통합관리", "a": "", "empNo": "313307", "grp": "장기손사", "fax": "0507-739-7171", "email": "zhaql48@hi.co.kr"}, {"tel": "02-3701-3173", "n": "이서현", "area": "손해사정", "p": "선임", "d": "장기손사지원파트", "sd": "", "u": "", "w": "- 현대해상(본체) 심사 인보험 지표관리\n- 위탁관리 업무지침, 이내첩 지침 운영 및 관리", "a": "", "empNo": "313330", "grp": "장기손사", "fax": "0507-770-0139", "email": "seohyun1204@hi.co.kr"}, {"tel": "02-3701-3180", "n": "박지연", "area": "손해사정", "p": "책임의료전담", "d": "장기손사지원파트", "sd": "", "u": "", "w": "- 의료자문 업체관리\n- 의료전담 업무지원, 의료자문 프로세스 수립 및 관리", "a": "", "empNo": "313354", "grp": "장기손사", "fax": "0507-770-0319", "email": "jiyon0415@hi.co.kr"}, {"tel": "02-3701-3183", "n": "정훈", "area": "손해사정", "p": "수석", "d": "장기손사지원파트", "sd": "품질개선TFT", "u": "", "w": "- 물보험 품질점검(QI)\n- 물보험 법인 RM ", "a": "", "empNo": "306870", "grp": "장기손사", "fax": "0507-770-2337", "email": "jh8901@hi.co.kr"}, {"tel": "02-3701-3177", "n": "이호준", "area": "손해사정", "p": "수석", "d": "장기손사지원파트", "sd": "품질개선TFT", "u": "", "w": "- 물보험 품질점검(QI)", "a": "", "empNo": "307765", "grp": "장기손사", "fax": "0507-770-2715", "email": "andy21@hi.co.kr"}, {"tel": "02-3701-3185", "n": "유정훈", "area": "손해사정", "p": "선임", "d": "장기손사지원파트", "sd": "품질개선TFT", "u": "", "w": "- 물보험 품질점검(QI)\n- 물보험 법인 RM", "a": "", "empNo": "313328", "grp": "장기손사", "fax": "0507-770-0114", "email": "yjhoon@hi.co.kr"}, {"tel": "02-3701-3172", "n": "유한그루", "area": "손해사정", "p": "과장", "d": "장기손사지원파트", "sd": "품질개선TFT", "u": "", "w": "- 인보험(실손) 품질점검(QI)\n- 인보험 법인 RM", "a": "", "empNo": "313285", "grp": "장기손사", "fax": "0507-770-0969", "email": "1tree87@hi.co.kr"}, {"tel": "02-3701-3169", "n": "이진용", "area": "손해사정", "p": "대리", "d": "장기손사지원파트", "sd": "품질개선TFT", "u": "", "w": "- 인보험(실손외) 품질점검(QI)\n- 인보험 법인 RM", "a": "", "empNo": "312595", "grp": "장기손사", "fax": "0507-739-6932", "email": "jylee@hi.co.kr"}, {"tel": "02-3701-3171", "n": "윤성민", "area": "손해사정", "p": "대리", "d": "장기손사지원파트", "sd": "품질개선TFT", "u": "", "w": "- 인보험(내부통제, 펫보험) 품질점검(QI)\n- 인보험 법인 RM", "a": "", "empNo": "313661", "grp": "장기손사", "fax": "0507-770-0564", "email": "yy0628@hi.co.kr"}, {"tel": "02-3701-3178", "n": "정귀영", "area": "손해사정", "p": "의료전담", "d": "장기손사지원파트", "sd": "품질개선TFT", "u": "", "w": "- 품질점검(QI) 의료지원\n- 의료심사 어드바이저 관리", "a": "", "empNo": "312295", "grp": "장기손사", "fax": "0507-739-6871", "email": "gwiy@hi.co.kr"}], bosang: [{"gubun": "개인", "region": "강남지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김현석", "pos": "과장", "emp": "H00514", "tel": "02-2181-2352"}, {"cat": "사망(상해)/장해", "dept": "중부권장기손사부", "name": "이정환", "pos": "수석", "emp": "306175", "tel": "042-602-7072"}, {"cat": "대물배상(누수)/소액재물", "dept": "프라임", "name": "윤여경", "pos": "담당", "emp": "GP0003", "tel": "02-2011-6140"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "한국", "name": "권혜민", "pos": "담당", "emp": "GF0002", "tel": "02-2270-7001"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김윤래", "pos": "수석", "emp": "305636", "tel": "02-3289-6194"}]}, {"gubun": "개인", "region": "강북지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "신동훈", "pos": "차장", "emp": "H00342", "tel": "02-2181-2585"}, {"cat": "사망(상해)/장해", "dept": "중부권장기손사부", "name": "장대두", "pos": "과장", "emp": "312102", "tel": "042-062-7073"}, {"cat": "대물배상(누수)/소액재물", "dept": "솔로몬", "name": "오승현", "pos": "담당", "emp": "GQ0004", "tel": "02-818-4753"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "파란", "name": "여환의", "pos": "담당", "emp": "PR0240", "tel": "02-2071-3556"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "곽호창", "pos": "차장", "emp": "311926", "tel": "02-3289-6157"}]}, {"gubun": "개인", "region": "강서지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김진동", "pos": "과장", "emp": "H00405", "tel": "02-2181-2505"}, {"cat": "사망(상해)/장해", "dept": "수도권장기손사부", "name": "박희진", "pos": "과장", "emp": "305323", "tel": "02-3289-6156"}, {"cat": "대물배상(누수)/소액재물", "dept": "프라임", "name": "윤여경", "pos": "담당", "emp": "GP0003", "tel": "02-2011-6140"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "리더스", "name": "노춘관", "pos": "담당", "emp": "GT0209", "tel": "02-2260-7700"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "박춘길", "pos": "수석", "emp": "306183", "tel": "02-3289-6169"}]}, {"gubun": "개인", "region": "강원지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김종순", "pos": "과장", "emp": "H00449", "tel": "042-602-7005"}, {"cat": "사망(상해)/장해", "dept": "수도권장기손사부", "name": "배정훈", "pos": "수석", "emp": "307603", "tel": "02-3289-6170"}, {"cat": "대물배상(누수)/소액재물", "dept": "인스비전", "name": "강현욱", "pos": "담당", "emp": "GAB008", "tel": "02-2260-7793"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "한국", "name": "권혜민", "pos": "담당", "emp": "GF0002", "tel": "02-2270-7001"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "박춘길", "pos": "수석", "emp": "306183", "tel": "02-3289-6169"}]}, {"gubun": "개인", "region": "경기지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김형준", "pos": "과장", "emp": "H00452", "tel": "02-2181-2301"}, {"cat": "사망(상해)/장해", "dept": "수도권장기손사부", "name": "박희진", "pos": "과장", "emp": "305323", "tel": "02-3289-6156"}, {"cat": "대물배상(누수)/소액재물", "dept": "프라임", "name": "심상미", "pos": "담당", "emp": "GP0028", "tel": "02-2011-6141"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "파란", "name": "여환의", "pos": "담당", "emp": "PR0240", "tel": "02-2071-3556"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김병구", "pos": "수석", "emp": "307576", "tel": "02-3289-6151"}]}, {"gubun": "개인", "region": "경남지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "강도훈", "pos": "과장", "emp": "H00561", "tel": "052-290-5420"}, {"cat": "사망(상해)/장해", "dept": "영남권장기손사부", "name": "강민정", "pos": "차장", "emp": "313368", "tel": "051-602-5780"}, {"cat": "대물배상(누수)/소액재물", "dept": "아세아", "name": "임한빈", "pos": "담당", "emp": "GX0004", "tel": "02-2260-7756"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "한국", "name": "권혜민", "pos": "담당", "emp": "GF0002", "tel": "02-2270-7001"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김영욱", "pos": "수석", "emp": "304250", "tel": "02-3289-6185"}]}, {"gubun": "개인", "region": "경인지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김상안", "pos": "과장", "emp": "H00656", "tel": "031-8014-6852"}, {"cat": "사망(상해)/장해", "dept": "중부권장기손사부", "name": "장대두", "pos": "과장", "emp": "312102", "tel": "042-062-7073"}, {"cat": "대물배상(누수)/소액재물", "dept": "인스비전", "name": "강현욱", "pos": "담당", "emp": "GAB008", "tel": "02-2260-7793"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "리더스", "name": "노춘관", "pos": "담당", "emp": "GT0209", "tel": "02-2260-7700"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "곽호창", "pos": "차장", "emp": "311926", "tel": "02-3289-6157"}]}, {"gubun": "개인", "region": "대경지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김건희", "pos": "과장", "emp": "H00348", "tel": "053-640-4701"}, {"cat": "사망(상해)/장해", "dept": "영남권장기손사부", "name": "강규택", "pos": "차장", "emp": "309235", "tel": "051-602-5782"}, {"cat": "대물배상(누수)/소액재물", "dept": "프라임", "name": "전현욱", "pos": "담당", "emp": "GP0015", "tel": "02-2011-6130"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "파란", "name": "여환의", "pos": "담당", "emp": "PR0240", "tel": "02-2071-3556"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김이수", "pos": "수석", "emp": "307951", "tel": "02-3289-6184"}]}, {"gubun": "개인", "region": "부산지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "송승호", "pos": "과장", "emp": "H00690", "tel": "051-602-5703"}, {"cat": "사망(상해)/장해", "dept": "중부권장기손사부", "name": "강난희", "pos": "차장", "emp": "303966", "tel": "042-602-7080"}, {"cat": "대물배상(누수)/소액재물", "dept": "에이원", "name": "이동원", "pos": "담당", "emp": "GM0038", "tel": "02-2011-6150"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "파란", "name": "여환의", "pos": "담당", "emp": "PR0240", "tel": "02-2071-3556"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김영욱", "pos": "수석", "emp": "304250", "tel": "02-3289-6185"}]}, {"gubun": "개인", "region": "북부지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김현이", "pos": "과장", "emp": "H00792", "tel": "02-2181-2790"}, {"cat": "사망(상해)/장해", "dept": "수도권장기손사부", "name": "김연진", "pos": "차장", "emp": "306704", "tel": "02-3289-6171"}, {"cat": "대물배상(누수)/소액재물", "dept": "에이원", "name": "이동원", "pos": "담당", "emp": "GM0038", "tel": "02-2011-6150"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "리더스", "name": "노춘관", "pos": "담당", "emp": "GT0209", "tel": "02-2260-7700"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "곽호창", "pos": "차장", "emp": "311926", "tel": "02-3289-6157"}]}, {"gubun": "개인", "region": "성남지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "신충훈", "pos": "수석", "emp": "H00081", "tel": "02-2181-2758"}, {"cat": "사망(상해)/장해", "dept": "영남권장기손사부", "name": "강규택", "pos": "차장", "emp": "309235", "tel": "051-602-5782"}, {"cat": "대물배상(누수)/소액재물", "dept": "솔로몬", "name": "오승현", "pos": "담당", "emp": "GQ0004", "tel": "02-818-4753"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "파란", "name": "여환의", "pos": "담당", "emp": "PR0240", "tel": "02-2071-3556"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김윤래", "pos": "수석", "emp": "305636", "tel": "02-3289-6194"}]}, {"gubun": "개인", "region": "영남지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김태수", "pos": "차장", "emp": "H00076", "tel": "051-602-5748"}, {"cat": "사망(상해)/장해", "dept": "수도권장기손사부", "name": "배정훈", "pos": "수석", "emp": "307603", "tel": "02-3289-6170"}, {"cat": "대물배상(누수)/소액재물", "dept": "에이원", "name": "김민성", "pos": "담당", "emp": "GM0174", "tel": "02-2270-7914"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "한국", "name": "권혜민", "pos": "담당", "emp": "GF0002", "tel": "02-2270-7001"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김영욱", "pos": "수석", "emp": "304250", "tel": "02-3289-6185"}]}, {"gubun": "개인", "region": "전북지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김현정", "pos": "과장", "emp": "H00152", "tel": "063-281-3601"}, {"cat": "사망(상해)/장해", "dept": "중부권장기손사부", "name": "강난희", "pos": "차장", "emp": "303966", "tel": "042-602-7080"}, {"cat": "대물배상(누수)/소액재물", "dept": "아세아", "name": "임한빈", "pos": "담당", "emp": "GX0004", "tel": "02-2260-7756"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "리더스", "name": "노춘관", "pos": "담당", "emp": "GT0209", "tel": "02-2260-7700"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김윤래", "pos": "수석", "emp": "305636", "tel": "02-3289-6194"}]}, {"gubun": "개인", "region": "제주사업부", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "손현수", "pos": "차장", "emp": "H00517", "tel": "051-602-5709"}, {"cat": "사망(상해)/장해", "dept": "수도권장기손사부", "name": "배정훈", "pos": "수석", "emp": "307603", "tel": "02-3289-6170"}, {"cat": "대물배상(누수)/소액재물", "dept": "아세아", "name": "송경석", "pos": "담당", "emp": "GX0002", "tel": "02-2260-7757"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "파란", "name": "여환의", "pos": "담당", "emp": "PR0240", "tel": "02-2071-3556"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김병구", "pos": "수석", "emp": "307576", "tel": "02-3289-6151"}]}, {"gubun": "개인", "region": "중부지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "정유진", "pos": "과장", "emp": "H00327", "tel": "042-602-7004"}, {"cat": "사망(상해)/장해", "dept": "수도권장기손사부", "name": "김연진", "pos": "차장", "emp": "306704", "tel": "02-3289-6171"}, {"cat": "대물배상(누수)/소액재물", "dept": "에이원", "name": "권순도", "pos": "담당", "emp": "GM0005", "tel": "02-2011-6152"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "한국", "name": "권혜민", "pos": "담당", "emp": "GF0002", "tel": "02-2270-7001"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "박춘길", "pos": "수석", "emp": "306183", "tel": "02-3289-6169"}]}, {"gubun": "개인", "region": "충청지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김기호", "pos": "과장", "emp": "H00617", "tel": "042-829-1461"}, {"cat": "사망(상해)/장해", "dept": "중부권장기손사부", "name": "이정환", "pos": "수석", "emp": "306175", "tel": "042-602-7072"}, {"cat": "대물배상(누수)/소액재물", "dept": "아세아", "name": "송경석", "pos": "담당", "emp": "GX0002", "tel": "02-2260-7757"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "한국", "name": "권혜민", "pos": "담당", "emp": "GF0002", "tel": "02-2270-7001"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김병구", "pos": "수석", "emp": "307576", "tel": "02-3289-6151"}]}, {"gubun": "개인", "region": "호남지역단", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김성무", "pos": "차장", "emp": "H00336", "tel": "062-602-3952"}, {"cat": "사망(상해)/장해", "dept": "영남권장기손사부", "name": "강민정", "pos": "차장", "emp": "313368", "tel": "051-602-5780"}, {"cat": "대물배상(누수)/소액재물", "dept": "솔로몬", "name": "노호용", "pos": "담당", "emp": "GQ0038", "tel": "02-2260-7777"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "리더스", "name": "노춘관", "pos": "담당", "emp": "GT0209", "tel": "02-2260-7700"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김이수", "pos": "수석", "emp": "307951", "tel": "02-3289-6184"}]}, {"gubun": "AM", "region": "강남AM사업부", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김현범", "pos": "차장", "emp": "H00387", "tel": "02-2181-2759"}, {"cat": "사망(상해)/장해", "dept": "중부권장기손사부", "name": "장대두", "pos": "과장", "emp": "312102", "tel": "042-062-7073"}, {"cat": "대물배상(누수)/소액재물", "dept": "에이원", "name": "이동원", "pos": "담당", "emp": "GM0038", "tel": "02-2011-6150"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "리더스", "name": "노춘관", "pos": "담당", "emp": "GT0209", "tel": "02-2260-7700"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김영욱", "pos": "수석", "emp": "304250", "tel": "02-3289-6185"}]}, {"gubun": "AM", "region": "강북AM사업부", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "최윤수", "pos": "차장", "emp": "H00175", "tel": "02-2181-2353"}, {"cat": "사망(상해)/장해", "dept": "수도권장기손사부", "name": "김연진", "pos": "차장", "emp": "306704", "tel": "02-3289-6171"}, {"cat": "대물배상(누수)/소액재물", "dept": "에이원", "name": "권순도", "pos": "담당", "emp": "GM0005", "tel": "02-2011-6152"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "리더스", "name": "노춘관", "pos": "담당", "emp": "GT0209", "tel": "02-2260-7700"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "곽호창", "pos": "차장", "emp": "311926", "tel": "02-3289-6157"}]}, {"gubun": "AM", "region": "경기AM사업부", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "안나", "pos": "과장", "emp": "H00158", "tel": "032-456-6402"}, {"cat": "사망(상해)/장해", "dept": "수도권장기손사부", "name": "배정훈", "pos": "수석", "emp": "307603", "tel": "02-3289-6170"}, {"cat": "대물배상(누수)/소액재물", "dept": "에이원", "name": "김민성", "pos": "담당", "emp": "GM0174", "tel": "02-2270-7914"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "한국", "name": "권혜민", "pos": "담당", "emp": "GF0002", "tel": "02-2270-7001"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "곽호창", "pos": "차장", "emp": "311926", "tel": "02-3289-6157"}]}, {"gubun": "AM", "region": "경인AM사업부", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김정원", "pos": "과장", "emp": "H00790", "tel": "031-8014-6804"}, {"cat": "사망(상해)/장해", "dept": "수도권장기손사부", "name": "박희진", "pos": "과장", "emp": "305323", "tel": "02-3289-6156"}, {"cat": "대물배상(누수)/소액재물", "dept": "프라임", "name": "윤여경", "pos": "담당", "emp": "GP0003", "tel": "02-2011-6140"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "리더스", "name": "노춘관", "pos": "담당", "emp": "GT0209", "tel": "02-2260-7700"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김윤래", "pos": "수석", "emp": "305636", "tel": "02-3289-6194"}]}, {"gubun": "AM", "region": "대구AM사업부", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "구현규", "pos": "차장", "emp": "H00444", "tel": "042-602-7062"}, {"cat": "사망(상해)/장해", "dept": "영남권장기손사부", "name": "강민정", "pos": "차장", "emp": "313368", "tel": "051-602-5780"}, {"cat": "대물배상(누수)/소액재물", "dept": "인스비전", "name": "강현욱", "pos": "담당", "emp": "GAB008", "tel": "02-2260-7793"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "파란", "name": "여환의", "pos": "담당", "emp": "PR0240", "tel": "02-2071-3556"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김병구", "pos": "수석", "emp": "307576", "tel": "02-3289-6151"}]}, {"gubun": "AM", "region": "명동AM사업부", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "신동훈", "pos": "차장", "emp": "H00342", "tel": "02-2181-2585"}, {"cat": "사망(상해)/장해", "dept": "중부권장기손사부", "name": "이정환", "pos": "수석", "emp": "306175", "tel": "042-602-7072"}, {"cat": "대물배상(누수)/소액재물", "dept": "프라임", "name": "심상미", "pos": "담당", "emp": "GP0028", "tel": "02-2011-6141"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "파란", "name": "여환의", "pos": "담당", "emp": "PR0240", "tel": "02-2071-3556"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김이수", "pos": "수석", "emp": "307951", "tel": "02-3289-6184"}]}, {"gubun": "AM", "region": "부경AM사업부", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "강도훈", "pos": "과장", "emp": "H00561", "tel": "052-290-5420"}, {"cat": "사망(상해)/장해", "dept": "중부권장기손사부", "name": "이정환", "pos": "수석", "emp": "306175", "tel": "042-602-7072"}, {"cat": "대물배상(누수)/소액재물", "dept": "아세아", "name": "임한빈", "pos": "담당", "emp": "GX0004", "tel": "02-2260-7756"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "리더스", "name": "노춘관", "pos": "담당", "emp": "GT0209", "tel": "02-2260-7700"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김영욱", "pos": "수석", "emp": "304250", "tel": "02-3289-6185"}]}, {"gubun": "AM", "region": "부산AM사업부", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "송승호", "pos": "과장", "emp": "H00690", "tel": "051-602-5703"}, {"cat": "사망(상해)/장해", "dept": "영남권장기손사부", "name": "강규택", "pos": "차장", "emp": "309235", "tel": "051-602-5782"}, {"cat": "대물배상(누수)/소액재물", "dept": "아세아", "name": "송경석", "pos": "담당", "emp": "GX0002", "tel": "02-2260-7757"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "양선호", "pos": "수석", "emp": "681555", "tel": "010-5110-3038"}, {"cat": "대인배상", "dept": "파란", "name": "여환의", "pos": "담당", "emp": "PR0240", "tel": "02-2071-3556"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김윤래", "pos": "수석", "emp": "305636", "tel": "02-3289-6194"}]}, {"gubun": "AM", "region": "서초AM사업부", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김진동", "pos": "과장", "emp": "H00405", "tel": "02-2181-2505"}, {"cat": "사망(상해)/장해", "dept": "영남권장기손사부", "name": "강규택", "pos": "차장", "emp": "309235", "tel": "051-602-5782"}, {"cat": "대물배상(누수)/소액재물", "dept": "솔로몬", "name": "오승현", "pos": "담당", "emp": "GQ0004", "tel": "02-818-4753"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "한국", "name": "권혜민", "pos": "담당", "emp": "GF0002", "tel": "02-2270-7001"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "박춘길", "pos": "수석", "emp": "306183", "tel": "02-3289-6169"}]}, {"gubun": "AM", "region": "중부AM사업부", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "정유진", "pos": "과장", "emp": "H00327", "tel": "042-602-7004"}, {"cat": "사망(상해)/장해", "dept": "영남권장기손사부", "name": "강민정", "pos": "차장", "emp": "313368", "tel": "051-602-5780"}, {"cat": "대물배상(누수)/소액재물", "dept": "솔로몬", "name": "노호용", "pos": "담당", "emp": "GQ0038", "tel": "02-2260-7777"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "한국", "name": "권혜민", "pos": "담당", "emp": "GF0002", "tel": "02-2270-7001"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "김이수", "pos": "수석", "emp": "307951", "tel": "02-3289-6184"}]}, {"gubun": "AM", "region": "호남AM사업부", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "송승주", "pos": "과장", "emp": "H00661", "tel": "042-829-1477"}, {"cat": "사망(상해)/장해", "dept": "중부권장기손사부", "name": "강난희", "pos": "차장", "emp": "303966", "tel": "042-602-7080"}, {"cat": "대물배상(누수)/소액재물", "dept": "프라임", "name": "전현욱", "pos": "담당", "emp": "GP0015", "tel": "02-2011-6130"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "한국", "name": "권혜민", "pos": "담당", "emp": "GF0002", "tel": "02-2270-7001"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "박춘길", "pos": "수석", "emp": "306183", "tel": "02-3289-6169"}]}, {"gubun": "CM", "region": "CM사업전략파트", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "김대영", "pos": "차장", "emp": "H00567", "tel": "042-602-7034"}, {"cat": "사망(상해)/장해", "dept": "수도권장기손사부", "name": "박희진", "pos": "과장", "emp": "305323", "tel": "02-3289-6156"}, {"cat": "대물배상(누수)/소액재물", "dept": "솔로몬", "name": "노호용", "pos": "담당", "emp": "GQ0038", "tel": "02-2260-7777"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "리더스", "name": "노춘관", "pos": "담당", "emp": "GT0209", "tel": "02-2260-7700"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "곽호창", "pos": "차장", "emp": "311926", "tel": "02-3289-6157"}]}, {"gubun": "TM", "region": "TM장기영업부", "cats": [{"cat": "사망(질병)/의료비/진단/수술/비용", "dept": "하이라이프손사", "name": "정태현", "pos": "과장", "emp": "H00469", "tel": "02-2181-2504"}, {"cat": "사망(상해)/장해", "dept": "수도권장기손사부", "name": "배정훈", "pos": "수석", "emp": "307603", "tel": "02-3289-6170"}, {"cat": "대물배상(누수)/소액재물", "dept": "에이원", "name": "김민성", "pos": "담당", "emp": "GM0174", "tel": "02-2270-7914"}, {"cat": "차량대물사고", "dept": "하이카손사", "name": "서보은", "pos": "수석", "emp": "680910", "tel": "010-5151-2816"}, {"cat": "대인배상", "dept": "리더스", "name": "노춘관", "pos": "담당", "emp": "GT0209", "tel": "02-2260-7700"}, {"cat": "화재/풍수해사고", "dept": "장기손사부", "name": "곽호창", "pos": "차장", "emp": "311926", "tel": "02-3289-6157"}]}] };
+
+// ── 대행자 이름 → 담당자(사번) 해석 & 카드 점프 ──
+var NAME2P = {}, EMP2P = {};
+DATA.people.forEach(function(p){
+  (NAME2P[p.n] = NAME2P[p.n] || []).push(p);
+  if (p.empNo != null && p.empNo !== "") EMP2P[String(p.empNo)] = p;
+});
+// 동명이인은 참조한 담당자와 같은 부서(d) → 같은 그룹(grp) 순으로 특정
+function resolveAltPerson(name, owner){
+  var cands = NAME2P[name]; if (!cands || !cands.length) return null;
+  if (cands.length === 1) return cands[0];
+  var byD = cands.filter(function(c){ return owner && c.d === owner.d; }); if (byD.length) return byD[0];
+  var byG = cands.filter(function(c){ return owner && c.grp === owner.grp; }); if (byG.length) return byG[0];
+  return cands[0];
+}
+// 괄호 밖 텍스트에서 등록된 담당자 이름만 탐욕적으로(긴 이름 우선) 추출
+function scanAltNames(text){
+  var segs = [], i = 0, buf = "";
+  while (i < text.length){
+    var hit = null;
+    for (var L = 4; L >= 2; L--){ var c = text.substr(i, L); if (c.length === L && NAME2P[c]){ hit = c; break; } }
+    if (hit){ if (buf){ segs.push({ text: buf }); buf = ""; } segs.push({ name: hit }); i += hit.length; }
+    else { buf += text.charAt(i); i++; }
+  }
+  if (buf) segs.push({ text: buf });
+  return segs;
+}
+// 대행자 문자열을 줄/괄호 구조 유지하며 세그먼트화 (괄호 안 지역·채널은 이름 탐색 제외)
+function altSegments(a){
+  return String(a || "").split("\n").map(function(line){
+    var out = [], re = /\(([^)]*)\)/g, last = 0, m;
+    while ((m = re.exec(line))){
+      if (m.index > last) out = out.concat(scanAltNames(line.slice(last, m.index)));
+      out.push({ text: m[0] });
+      last = re.lastIndex;
+    }
+    if (last < line.length) out = out.concat(scanAltNames(line.slice(last)));
+    return out;
+  });
+}
+function altNamesStr(p){
+  var names = [];
+  altSegments(p.a).forEach(function(line){ line.forEach(function(s){ if (s.name) names.push(s.name); }); });
+  return names.join(" ");
+}
+var ALT_ARR = '';
+function altBodyHtml(p){
+  function seg(s){
+    if (s.name){
+      var person = resolveAltPerson(s.name, p);
+      if (person && person.empNo != null && person.empNo !== "")
+        return '<button type="button" class="person-alt-jump" data-jump-emp="' + escapeHtml(String(person.empNo)) + '" title="' + escapeHtml(s.name) + ' 위치로 이동">' + escapeHtml(s.name) + ALT_ARR + '</button>';
+      return '<span class="alt-name-plain">' + escapeHtml(s.name) + '</span>';
+    }
+    var t = (s.text || '').trim();
+    return t ? '<span class="alt-ctx">' + escapeHtml(t) + '</span>' : '';
+  }
+  // 이름 없는 줄(직급·지역 등)은 직전 이름 줄에 이어붙여 "이름+직급+지역"을 한 행으로 묶음
+  var rows = [];
+  altSegments(p.a).forEach(function(line){
+    var hasName = line.some(function(s){ return s.name; });
+    var inner = line.map(seg).join('');
+    if (!inner) return;
+    if (!hasName && rows.length) rows[rows.length - 1] += inner;
+    else rows.push(inner);
+  });
+  return rows.map(function(r){ return '<div class="alt-line">' + r + '</div>'; }).join('');
+}
+// 대행자 클릭 → 해당 담당자 카드로 이동: 현재 화면에 보이면 스크롤+강조, 없으면 통합검색으로 폴백
+function flashCard(card){ if(!card) return; card.classList.remove('card-flash'); void card.offsetWidth; card.classList.add('card-flash'); setTimeout(function(){ card.classList.remove('card-flash'); }, 1700); }
+function jumpToEmp(emp){
+  if (!emp) return;
+  var cards = document.querySelectorAll('.person-card[data-emp="' + emp + '"]');
+  var vis = null;
+  Array.prototype.forEach.call(cards, function(c){ if (!vis && c.offsetParent !== null) vis = c; });
+  if (vis){ vis.scrollIntoView({ behavior: 'smooth', block: 'center' }); flashCard(vis); return; }
+  var person = EMP2P[String(emp)];
+  var stab = document.querySelector('.topbar .tab[data-target="search"]'); if (stab) stab.click();
+  var qi = $id('q-search'), qf = $id('q-form');
+  if (qi && qf && person){
+    qi.value = person.n;
+    qf.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    var t = document.querySelector('#q-results .person-card[data-emp="' + emp + '"]');
+    if (t){ t.scrollIntoView({ behavior: 'smooth', block: 'center' }); flashCard(t); }
+  }
+}
+
+DATA.people.forEach(p => {
+  p._s = (p.n + " " + p.d + " " + (p.sd || "") + " " + p.w + " " + (p.empNo || "") + " " + altNamesStr(p)).toLowerCase();
+  p._cs = toChosung(p.n + " " + p.w);
+  // 업무 키워드 토큰화 (업무별 보기용)
+  p._tokens = (p.w || "").split(/[/,，、()（）\s└-]+/).filter(t => t && t.length >= 2 && t.length <= 8);
+});
+
+// ============================================================
+// 공용 헬퍼 (카드 렌더 · 지역 매칭)
+// ============================================================
+function $id(id){ return document.getElementById(id); }
+
+// ── 즐겨찾기 (localStorage, 단일 기기) ──
+var FAV = (function(){
+  var KEY = 'finder_favs_v1';
+  function load(){ try { return JSON.parse(localStorage.getItem(KEY) || '[]') || []; } catch(e){ return []; } }
+  function save(a){ try { localStorage.setItem(KEY, JSON.stringify(a)); } catch(e){} }
+  var ids = load().map(String);
+  return {
+    has: function(id){ return ids.indexOf(String(id)) >= 0; },
+    toggle: function(id){ id = String(id); var i = ids.indexOf(id); if(i >= 0) ids.splice(i,1); else ids.unshift(id); save(ids); return ids.indexOf(id) >= 0; },
+    list: function(){ return ids.slice(); },
+    setOrder: function(arr){ ids = arr.map(String); save(ids); }
+  };
+})();
+
+// ── 연락처/즐겨찾기 아이콘 ──
+var IC_TEL_S='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.8 12.18 19.79 19.79 0 0 1 1.72 3.58 2 2 0 0 1 3.7 1.37h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.08 6.08l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+var IC_MAIL_S='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>';
+var IC_FAX_S='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>';
+var IC_COPY_S='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+var IC_STAR_S='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
+var IC_XSM_S='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+var IC_CHEV_S='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+var IC_ID_S='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M5 17c0-1.5 1.5-2.5 3.5-2.5S12 15.5 12 17"/><path d="M15 9h3"/><path d="M15 13h3"/></svg>';
+
+function favBtn(p){
+  if(!p.empNo) return '';
+  var on = FAV.has(p.empNo);
+  return '<button type="button" class="pc-fav' + (on ? ' on' : '') + '" data-fav="' + escapeHtml(String(p.empNo)) + '" aria-pressed="' + (on ? 'true' : 'false') + '" aria-label="즐겨찾기" title="즐겨찾기에 추가/해제">' + IC_STAR_S + '</button>';
+}
+function contactLine(icon, val, href, label){
+  var v = href
+    ? '<a class="pc-c-val" href="' + href + '">' + escapeHtml(val) + '</a>'
+    : '<span class="pc-c-val">' + escapeHtml(val) + '</span>';
+  return '<div class="pc-c-line"><span class="pc-c-ic" aria-hidden="true">' + icon + '</span>'
+    + '<span class="pc-c-lbl">' + label + '</span>' + v
+    + '<button type="button" class="pc-copy" data-copy="' + escapeHtml(val) + '" aria-label="' + label + ' 복사" title="' + label + ' 복사">' + IC_COPY_S + '</button></div>';
+}
+function contactBlock(p){
+  var rows = '';
+  if(p.empNo) rows += contactLine(IC_ID_S, String(p.empNo), '', '사번');
+  if(p.tel)   rows += contactLine(IC_TEL_S, p.tel, '', '전화');
+  if(p.email) rows += contactLine(IC_MAIL_S, p.email, '', '메일');
+  if(p.fax)   rows += contactLine(IC_FAX_S, p.fax, '', '팩스');
+  if(!rows) return '';
+  return '<div class="pc-foot"><button type="button" class="pc-toggle" aria-expanded="false">' + IC_ID_S + '<span>담당자 정보</span><span class="pc-toggle-ic">' + IC_CHEV_S + '</span></button>'
+    + '<span class="pc-copy-hint">' + IC_COPY_S + '<span>아이콘을 클릭하면 복사됩니다</span></span></div>'
+    + '<div class="pc-contact">' + rows + '</div>';
+}
+// 보상서포터즈 카드용 연락처(담당자 카드와 동일 컴포넌트 재사용: 링크X·복사+토스트)
+function bsContact(c){
+  var rows = '';
+  if(c.emp) rows += contactLine(IC_ID_S, String(c.emp), '', '사번');
+  if(c.tel) rows += contactLine(IC_TEL_S, c.tel, '', '전화');
+  return rows ? '<div class="bs-card-contact">' + rows + '</div>' : '';
+}
+// 보상서포터즈 카드(공용) — 보상 탭·지역별 탭에서 재사용
+function bsCatCard(c){
+  return '<div class="bs-card"><div class="bs-card-cat">' + escapeHtml(c.cat) + '</div><div class="bs-card-body">'
+    + '<div class="bs-card-name">' + escapeHtml(c.name) + (c.pos ? ' <span class="bs-card-pos">' + escapeHtml(c.pos) + '</span>' : '') + '</div>'
+    + '<div class="bs-card-dept">' + escapeHtml(c.dept) + '</div>'
+    + bsContact(c) + '</div></div>';
+}
+
+window.GRP_AVATAR = {
+  '장기보험':   { label:'장기',   bg:'#fff4cc', color:'#00205b' },
+  '장기손사':   { label:'손사',   bg:'#ece0d0', color:'#00205b' },
+  '자동차보험': { label:'자동차', bg:'#d8eaf7', color:'#00205b' },
+  '일반보험':   { label:'일반',   bg:'#ffe5cc', color:'#00205b' },
+  '소비자':     { label:'소비자', bg:'#fce0ea', color:'#00205b' },
+  '마케팅':     { label:'마케팅', bg:'#ede0f7', color:'#00205b' }
+};
+var REGION_DEFS = [
+  { jsokkws:['강원지역단'], amkws:['경기AM'] },
+  { jsokkws:['경인지역단'], amkws:['경인AM'] },
+  { jsokkws:['강북지역단'], amkws:['강북AM','명동AM'] },
+  { jsokkws:['북부지역단'], amkws:['강북AM'] },
+  { jsokkws:['강서지역단','강남지역단'], amkws:['서초AM','강남AM'] },
+  { jsokkws:['경기지역단','성남지역단'], amkws:['경기AM'] },
+  { jsokkws:['충청지역단'], amkws:['중부AM'] },
+  { jsokkws:['중부지역단'], amkws:['중부AM'] },
+  { jsokkws:['대경지역단'], amkws:['대구AM'] },
+  { jsokkws:['전북지역단'], amkws:['호남AM'] },
+  { jsokkws:['경남지역단'], amkws:['부산AM'] },
+  { jsokkws:['부산지역단','영남지역단'], amkws:['부경AM'] },
+  { jsokkws:['호남지역단'], amkws:['호남AM'] },
+  { jsokkws:['제주사업부'], amkws:['호남AM'] }
+];
+function regionTokenMatch(text, kws){
+  var toks = String(text||'').split(/[\s\(\),·\/\-]+/).filter(Boolean).map(function(t){ return t.toLowerCase(); });
+  return kws.some(function(kw){ var lk = kw.toLowerCase(); return toks.some(function(t){ return t.indexOf(lk) === 0; }); });
+}
+function fmtWork(w, exp){
+  if (!w) return '<div class="person-work"></div>';
+  // 줄바꿈이 있으면 줄 단위로, 없으면 레거시 ' - ' 구분자로 분리
+  var lines = (w.indexOf('\n') >= 0) ? w.split(/\n/) : w.split(/\s*-\s+/);
+  // 각 줄을 최상위(-) / 하위(└) 항목으로 정규화
+  var items = lines.map(function(raw){
+    var t = String(raw).replace(/\s+$/, '').replace(/^\s+/, '');
+    if (!t) return null;
+    if (t.charAt(0) === '└') return { sub: true, text: t.replace(/^└\s*/, '').trim() };
+    return { sub: false, text: t.replace(/^[-\s]+/, '').trim() };
+  }).filter(function(i){ return i && i.text; });
+  if (!items.length) return '';
+  // 단일 항목도 일관되게 불릿(•) 리스트로 렌더링
+  return '<div class="person-work"><ul class="person-work-list">'
+    + items.map(function(i){
+        return i.sub
+          ? '<li class="work-sub-li">' + highlight(i.text, exp) + '</li>'
+          : '<li>' + highlight(i.text, exp) + '</li>';
+      }).join('')
+    + '</ul></div>';
+}
+function personCardHtml(p, exp){
+  exp = exp || [];
+  var ga = window.GRP_AVATAR[p.grp] || null;
+  var aStyle = ga ? 'background:' + ga.bg + ';color:' + ga.color + ';' : '';
+  var aLabel = ga ? ga.label : escapeHtml(initials(p.n));
+  // 신원 정보(직책·사번)는 이름 옆, 소속 정보(부서·서브부서)는 그 아래 줄로 분리 (FINDER.html과 동일)
+  var idBits = [];
+  if (p.p) idBits.push(escapeHtml(p.p));
+  if (p.empNo) idBits.push(escapeHtml(p.empNo));
+  var idInline = idBits.join(' · ');
+  var deptBits = [];
+  if (p.d) deptBits.push(highlight(p.d, exp));
+  if (p.sd) deptBits.push(highlight(p.sd, exp));
+  var deptInline = deptBits.join(' · ');
+  var alt = p.a ? '<div class="person-alt"><span class="person-alt-label">대행</span><div class="person-alt-body">' + altBodyHtml(p) + '</div></div>' : '';
+  // 업무분류 알약은 카드 우측에 세로 중앙 배치 (FINDER.html과 동일)
+  var fn = p.u ? '<button type="button" class="pc-fn pc-fn-link" title="'+escapeHtml((p.u||'').replace(/\n/g,' '))+'" data-fn-area="'+escapeHtml(p.area||'')+'" data-fn-u="'+escapeHtml(p.u||'')+'">'+highlight(p.u, exp).replace(/\n/g,'<br>')+'</button>' : '';
+  return '<div class="person-card' + (p.u ? ' has-fn' : '') + '" data-emp="' + escapeHtml(String(p.empNo || '')) + '">' + favBtn(p) + '<div class="person-card-head">'
+    + '<div class="person-avatar"' + (aStyle ? ' style="' + aStyle + '"' : '') + '>' + aLabel + '</div>'
+    + '<div class="person-info-block"><div class="person-primary-row">'
+      + '<div class="person-name-row"><span class="person-name-main">' + highlight(p.n, exp) + '</span>'
+        + (idInline ? '<span class="person-id-inline">' + idInline + '</span>' : '') + '</div>'
+      + (deptInline ? '<span class="person-meta-inline">' + deptInline + '</span>' : '')
+    + '</div></div>' + fn + '</div>' + fmtWork(p.w, exp) + alt + contactBlock(p) + '</div>';
+}
+
+// 부서/업무영역 그룹 헤더(접이식 map-section) — index 담당자맵 디자인 이식
+var CHEV_DOWN='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+function mapSectionHtml(label, badge, cardsHtml, bodyClass){
+  bodyClass = bodyClass || 'person-grid';
+  return '<div class="map-section open"><button class="map-section-head" type="button">'
+    + '<span class="map-section-arrow">' + CHEV_DOWN + '</span>'
+    + '<span class="map-section-title">' + escapeHtml(label) + '</span>'
+    + '<span class="map-section-count">' + badge + '</span></button>'
+    + '<div class="map-section-body"><div class="' + bodyClass + '">' + cardsHtml + '</div></div></div>';
+}
+function bindMapSectionToggle(container){
+  container.addEventListener('click', function(e){
+    var h = e.target.closest('.map-section-head');
+    if (h && container.contains(h)) h.parentNode.classList.toggle('open');
+  });
+}
+
+// ====================================================================
+// 모바일 앱 레이어 (prelude의 DATA·순수 헬퍼를 재사용)
+// ====================================================================
+
+// ── 아이콘 ──
+var I={
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+  dept:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  area:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+  more:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>',
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>',
+  relay:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>',
+  chevR:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
+  filter:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18M6 12h12M10 19h4"/></svg>',
+  info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
+  heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+  car:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 .78-1.56L5.22 4H18.8l2.44 3.44A2 2 0 0 1 23 9v6a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17" r="2.5"/><circle cx="16.5" cy="17" r="2.5"/><path d="M1 9h22"/></svg>',
+  build:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22h18"/><path d="M6 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><path d="M10 22v-5h4v5"/></svg>'
+};
+function el(id){return document.getElementById(id);}
+function esc(s){return escapeHtml(String(s==null?'':s));}
+
+// ── 연락처: 모바일 탭(전화/메일) + 복사 (prelude의 contactBlock/bsContact 오버라이드) ──
+function telHref(t){return 'tel:'+String(t).replace(/[^0-9+]/g,'');}
+var IC_CARET_D='<svg class="mc-tg-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+// 담당자 정보는 기본 접힘 — '담당자 정보' 토글을 누르면 펼쳐진다. 사번/복사 없음, 전화에만 통화버튼.
+function contactBlock(p){
+  var rows='';
+  if(p.tel)   rows+='<div class="mc-row"><span class="mc-lbl">전화</span><span class="mc-val">'+esc(p.tel)+'</span><a class="mc-actbtn" href="'+telHref(p.tel)+'">'+IC_TEL_S+'전화걸기</a></div>';
+  if(p.email) rows+='<div class="mc-row"><span class="mc-lbl">메일</span><span class="mc-val">'+esc(p.email)+'</span><a class="mc-actbtn" href="mailto:'+esc(p.email)+'">'+IC_MAIL_S+'메일보내기</a></div>';
+  if(p.fax)   rows+='<div class="mc-row"><span class="mc-lbl">팩스</span><span class="mc-val">'+esc(p.fax)+'</span></div>';
+  if(!rows) return '';
+  return '<div class="mc"><button type="button" class="mc-toggle" aria-expanded="false">'+IC_ID_S+'<span>담당자 정보</span>'+IC_CARET_D+'</button><div class="mc-body">'+rows+'</div></div>';
+}
+// 보상서포터즈 카드: 전화만 — 전체폭 통화버튼(번호 표시), 접지 않음
+function bsContact(c){
+  if(!c.tel) return '';
+  return '<div class="bs-card-contact"><a class="mc-callbtn mc-callbtn-full" href="'+telHref(c.tel)+'">'+IC_TEL_S+'전화걸기 · '+esc(c.tel)+'</a></div>';
+}
+
+// ── 토스트 / 복사 ──
+var _toastT=null;
+function toast(msg){var t=el('m-toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('show');},1500);}
+function copyText(v){
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(v).then(function(){toast('복사됨: '+v);},function(){fallbackCopy(v);});}
+  else fallbackCopy(v);
+}
+function fallbackCopy(v){try{var ta=document.createElement('textarea');ta.value=v;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('복사됨: '+v);}catch(e){toast('복사 실패');}}
+
+// ── 빈 상태 ──
+function emptyHtml(title,hint){
+  return '<div class="empty"><div class="empty-ic">'+I.search+'</div><div class="empty-title">'+esc(title)+'</div>'
+    +(hint?'<div class="empty-hint">'+hint+'</div>':'')+'</div>';
+}
+
+// ── jumpToEmp 오버라이드(모바일 네비) ──
+function jumpToEmp(emp){
+  if(!emp) return;
+  var c=document.querySelector('#m-content .person-card[data-emp="'+emp+'"]');
+  if(c&&c.offsetParent!==null){c.scrollIntoView({behavior:'smooth',block:'center'});flashCard(c);return;}
+  var person=EMP2P[String(emp)];if(!person)return;
+  go('search');var qi=el('m-q');if(qi)qi.value=person.n;
+  runSearch(person.n);
+  setTimeout(function(){var t=document.querySelector('#m-content .person-card[data-emp="'+emp+'"]');if(t){t.scrollIntoView({behavior:'smooth',block:'center'});flashCard(t);}},80);
+}
+
+// ── 파생 데이터(부서/업무/상품) ──
+var GORDER=['장기보험','장기손사','자동차보험','일반보험','소비자','마케팅'];
+var byGrp={},deptOrder=[],dept2grp={};
+DATA.people.forEach(function(p){byGrp[p.grp]=byGrp[p.grp]||{};byGrp[p.grp][p.d]=(byGrp[p.grp][p.d]||0)+1;});
+GORDER.forEach(function(g){Object.keys(byGrp[g]||{}).forEach(function(d){deptOrder.push(d);dept2grp[d]=g;});});
+
+var areaOrder=[],areaCnt={};
+DATA.people.forEach(function(p){var a=p.area||'기타';if(areaCnt[a]===undefined)areaOrder.push(a);areaCnt[a]=(areaCnt[a]||0)+1;});
+
+var empIdx={};DATA.people.forEach(function(p){if(p.empNo)empIdx[String(p.empNo)]=p;});
+var PRODUCTS=[
+  {label:'화재/재물/근재',emps:['304659','306989','308027','305298','305161'],note:'지역별 담당자 — 지역단 키워드로 확인'},
+  {label:'책임보험',emps:['311055','312329','313290','313336','313588'],note:'지역별 담당자 — 지역단 키워드로 확인'},
+  {label:'재산종합/테러',emps:['309295','313342'],note:''},
+  {label:'기술보험',emps:['313051','313342'],note:''},
+  {label:'박물관종합',emps:['310524'],note:''},
+  {label:'영문동산종합',emps:['311034'],note:''},
+  {label:'사이버보험',emps:['313290'],note:''},
+  {label:'풍수해/신변안전',emps:['313588'],note:''},
+  {label:'상해/여행자',emps:['308784'],note:''},
+  {label:'해상(적하)',emps:['313440'],note:''},
+  {label:'해상(선박/경량항공기)',emps:['313802'],note:''},
+  {label:'항공보험',emps:['307709','312282'],note:''},
+  {label:'성능점검책임',emps:['313703'],note:''}
+];
+
+// 지역 파생(전속/AM)
+function regionList(mode){var seen={},out=[];REGION_DEFS.forEach(function(d){(mode==='am'?d.amkws:d.jsokkws).forEach(function(k){if(!seen[k]){seen[k]=1;out.push(k);}});});return out;}
+function peopleForRegion(kw){return DATA.people.filter(function(p){return regionTokenMatch((p.w||'')+' '+(p.sd||'')+' '+(p.d||''),[kw]);});}
+function bosangForRegion(region,mode){var g=mode==='am'?'AM':'개인',cats=[];(DATA.bosang||[]).forEach(function(o){if(o.gubun!==g)return;var hit=mode==='am'?(o.region.indexOf(region)===0):(o.region===region);if(hit)o.cats.forEach(function(c){cats.push(c);});});return cats;}
+
+// 보상서포터즈 채널
+var BS_GORDER=['개인','AM','CM','TM'],BS_GLABEL={'개인':'개인영업','AM':'AM영업','CM':'CM채널','TM':'TM채널'};
+
+// 현장소통담당 보드
+var FC_BOARD=[
+  {cat:'장기',icon:I.heart,bg:'#fff4cc',members:[
+    {n:'유형석',rk:'과장',d:'장기전략파트'},{n:'노태규',rk:'전임',d:'장기심사부'},{n:'방실',rk:'대리',d:'장기계약관리부'},
+    {n:'양진모',rk:'수석',d:'장기시스템파트'},{n:'유한그루',rk:'과장',d:'장기손사지원파트'},{n:'김민정',rk:'선임',d:'장기손사지원파트'}]},
+  {cat:'자동차',icon:I.car,bg:'#d8eaf7',members:[
+    {n:'허회',rk:'차장',d:'자동차업무파트'},{n:'김동환',rk:'전임',d:'자동차업무파트'}]},
+  {cat:'일반',icon:I.build,bg:'#ffe5cc',members:[
+    {n:'김혁진',rk:'대리',d:'일반보험기획파트'}]},
+  {cat:'소비자보호',icon:I.shield,bg:'#fce0ea',members:[
+    {n:'주광명',rk:'수석',d:'소비자권익보호부'},{n:'김수옥',rk:'대리',d:'소비자권익보호부'},{n:'조우성',rk:'대리',d:'소비자지원부'}]}
+];
+var fcIdx={};DATA.people.forEach(function(p){fcIdx[p.n+'|'+p.d]=p;});
+
+// localStorage 핀 헬퍼
+function loadPins(key){try{return JSON.parse(localStorage.getItem(key)||'[]')||[];}catch(e){return[];}}
+function savePins(key,arr){try{localStorage.setItem(key,JSON.stringify(arr));}catch(e){}}
+
+// ====================================================================
+// 앱 상태 & 뷰 정의
+// ====================================================================
+var M={
+  view:'search',
+  region_mode:'jsok',
+  area_panel:'work',
+  dept:{grp:null,d:null},
+  area:{a:null,u:null},
+  region:{jsok:null,am:null},
+  bosang:{sel:null,q:''},
+  search:{q:''}
+};
+
+var NAV=[
+  {id:'search',label:'검색',icon:I.search},
+  {id:'dept',label:'부서별',icon:I.dept},
+  {id:'area',label:'업무·상품',icon:I.area},
+  {id:'region',label:'지역별',icon:I.pin},
+  {id:'more',label:'더보기',icon:I.more}
+];
+var MORE=[
+  {id:'bosang',label:'보상서포터즈',desc:'지역·채널별 보상 담당',icon:I.shield},
+  {id:'fieldcom',label:'현장소통담당',desc:'보종별 소통 담당자',icon:I.relay},
+  {id:'favorites',label:'즐겨찾기',desc:'내가 저장한 담당자',icon:I.star}
+];
+var PRIMARY={search:1,dept:1,area:1,region:1};
+
+// ── 네비 렌더 ──
+function buildNav(){
+  var favN=FAV.list().length;
+  el('m-nav').innerHTML=NAV.map(function(n){
+    var on=(n.id==='more')?(!PRIMARY[M.view]):(M.view===n.id);
+    var badge=(n.id==='more'&&favN)?'<span class="nav-badge">'+favN+'</span>':'';
+    return '<button data-nav="'+n.id+'" class="'+(on?'on':'')+'"><span class="ni">'+n.icon+'</span>'+badge+'<span>'+n.label+'</span></button>';
+  }).join('');
+}
+
+// ── 좌측 당김 핸들 라벨(뷰별 자연어) ──
+function edgeLabel(){
+  if(M.view==='dept') return '부서보기';
+  if(M.view==='area') return M.area_panel==='product'?'상품보기':'업무보기';
+  if(M.view==='region'||M.view==='bosang') return '지역보기';
+  return '';
+}
+function updateEdge(){
+  var has=!!VIEWS[M.view].drawer, e=el('m-edge');
+  e.classList.toggle('show',has);
+  if(has){ var lbl=e.querySelector('.me-label'); if(lbl) lbl.textContent=edgeLabel(); }
+}
+
+// ── 라우팅 ──
+function go(view){
+  M.view=view;
+  closeDrawer();closeSheet();
+  buildNav();
+  VIEWS[view].sub();
+  VIEWS[view].render();
+  updateEdge();  // 드로어가 있는 뷰에서만 핸들 노출 + 뷰별 라벨
+  window.scrollTo(0,0);
+}
+
+// ====================================================================
+// 뷰: 통합검색
+// ====================================================================
+function searchSub(){
+  el('m-sub').innerHTML='<div class="m-search'+(M.search.q?' has-val':'')+'" id="m-search-wrap">'+I.search
+    +'<input id="m-q" type="search" inputmode="search" enterkeyhint="search" placeholder="이름 · 부서 · 업무 · 지역" autocomplete="off" spellcheck="false">'
+    +'<button class="m-search-clear" id="m-q-clear" aria-label="지우기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>';
+  var qi=el('m-q');qi.value=M.search.q||'';
+  setupSearchInput(qi,el('m-q-clear'),function(){
+    M.search.q=qi.value;el('m-search-wrap').classList.toggle('has-val',!!qi.value);
+    if(!normalizeQuery(qi.value)) renderSearchIdle(); else runSearch(qi.value);
+  });
+}
+function renderSearchIdle(){
+  var hist=searchHistory.get();
+  var chips=hist.length?'<div class="q-sec-label">최근 검색<span class="ln"></span></div><div class="q-chips">'
+    +hist.map(function(h){return '<button class="q-chip" data-hist="'+esc(h)+'">'+esc(h)+'<span class="x" data-histx="'+esc(h)+'">×</span></button>';}).join('')+'</div>':'';
+  el('m-content').innerHTML=
+    '<div class="q-hero"><div class="q-hero-mark">현장<span class="o">소통</span>공간</div>'
+    +'<div class="q-hero-sub">이름·부서·담당업무·지역단을<br>한 번에 찾아드려요</div></div>'
+    +chips;
+}
+function runSearch(raw){
+  var q=normalizeQuery(raw);if(!q){renderSearchIdle();return;}
+  var pq=parseQuery(q),exp=pq.expanded,isCho=pq.isChosung;
+  var ppl=DATA.people.filter(function(p){return matches(isCho?p._cs:p._s,exp);});
+  var bos=[];(DATA.bosang||[]).forEach(function(o){o.cats.forEach(function(c){if(matches(isCho?c._cs:c._s,exp))bos.push(c);});});
+  var html='';
+  if(!ppl.length&&!bos.length){
+    var alt=suggestAlternatives(q);
+    html=emptyHtml('검색 결과가 없습니다',(alt&&alt.length)?'이런 키워드는 어떠세요? <b>'+alt.map(esc).join('</b>, <b>')+'</b>':'다른 이름·부서·업무로 검색해보세요');
+  }else{
+    html+='<div class="m-stat"><b>'+ppl.length+'</b>명 · 보상 <b>'+bos.length+'</b>건</div>';
+    if(ppl.length){
+      html+='<div class="q-sec-label">담당자<span class="ln"></span><span class="q-sec-cnt">'+ppl.length+'</span></div>';
+      html+='<div class="person-grid">'+ppl.map(function(p){return personCardHtml(p,exp);}).join('')+'</div>';
+    }
+    if(bos.length){
+      html+='<div class="q-sec-label">보상서포터즈<span class="ln"></span><span class="q-sec-cnt">'+bos.length+'</span></div>';
+      html+='<div class="bs-grid">'+bos.map(function(c){return bsCatCard(c);}).join('')+'</div>';
+    }
+  }
+  el('m-content').innerHTML=html;
+  if(searchHistory&&searchHistory.add)searchHistory.add(raw.trim());
+}
+function searchRender(){if(M.search.q&&normalizeQuery(M.search.q))runSearch(M.search.q);else renderSearchIdle();}
+
+// ====================================================================
+// 뷰: 부서별
+// ====================================================================
+var CARET_D='<svg class="fl-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+// 카테고리 선택 칩: (선택)카테고리 라벨 + 현재 선택값 + 아래 화살표 → 검색창과 구분.
+// cat이 비면 라벨 생략(현재 보고 있는 맵 제목만 표시). mode: 'flex1' 채움 / 'noshrink' 줄어들지 않음.
+function filterChip(cat,value,mode){
+  var cls='m-filter'+(mode==='flex1'?' flex1':'')+(mode==='noshrink'?' noshrink':'');
+  var catHtml=cat?'<span class="fl-cat">'+esc(cat)+'</span>':'';
+  return '<button class="'+cls+'" id="m-filter-btn">'+catHtml+'<span class="fl-txt">'+esc(value)+'</span>'+CARET_D+'</button>';
+}
+function deptSub(){
+  // 현재 선택은 콘텐츠 섹션 제목으로 보이고, 목록은 좌측 핸들로 연다 → 서브바 비움
+  el('m-sub').innerHTML='';
+}
+function deptRender(){
+  var list=DATA.people.slice();
+  if(M.dept.grp)list=list.filter(function(p){return p.grp===M.dept.grp;});
+  if(M.dept.d)list=list.filter(function(p){return p.d===M.dept.d;});
+  var c=el('m-content');
+  if(!list.length){c.innerHTML=emptyHtml('해당 부서에 담당자가 없습니다','');return;}
+  var groups={};list.forEach(function(p){(groups[p.d]=groups[p.d]||[]).push(p);});
+  var html='<div class="m-stat"><b>'+list.length+'</b>명 · '+Object.keys(groups).length+'개 부서</div>';
+  deptOrder.forEach(function(d){if(!groups[d])return;
+    html+=mapSectionHtml(d,groups[d].length+'명',groups[d].map(function(p){return personCardHtml(p,[]);}).join(''));});
+  c.innerHTML=html;}
+function deptDrawer(){
+  var h='<div class="d-cap"><span>부서 선택</span><span>'+DATA.people.length+'명</span></div>';
+  h+='<button class="d-item'+(!M.dept.grp&&!M.dept.d?' on':'')+'" data-dall="1"><span class="d-name">전체 부서</span><span class="d-cnt">'+DATA.people.length+'</span></button>';
+  GORDER.forEach(function(g){if(!byGrp[g])return;var depts=byGrp[g],total=0;Object.keys(depts).forEach(function(d){total+=depts[d];});
+    var open=(M.dept.grp===g)||(M.dept.d&&dept2grp[M.dept.d]===g);
+    h+='<div class="d-grp'+(open?' open':'')+'" data-grp="'+esc(g)+'"><button class="d-grp-hd" data-grptoggle="'+esc(g)+'"><span class="arr">'+I.chevR+'</span><span>'+esc(g)+'</span><span class="d-grp-cnt">'+total+'</span></button><div class="d-grp-body"><div class="d-grp-inner">';
+    Object.keys(depts).forEach(function(d){
+      h+='<button class="d-item'+(M.dept.d===d?' on':'')+'" data-dept="'+esc(d)+'"><span class="d-name">'+esc(d)+'</span><span class="d-cnt">'+depts[d]+'</span></button>';});
+    h+='</div></div></div>';});
+  return {title:'부서 보기',body:h,after:syncDrawerAccordion};
+}
+
+// ====================================================================
+// 뷰: 업무·상품별
+// ====================================================================
+function areaSub(){
+  var seg='<div class="m-seg"><button data-apanel="work" class="'+(M.area_panel==='work'?'on':'')+'">업무별</button>'
+    +'<button data-apanel="product" class="'+(M.area_panel==='product'?'on':'')+'">상품별</button></div>';
+  // 업무/상품 목록은 좌측 핸들로 연다. 서브바는 업무별/상품별 토글만.
+  el('m-sub').innerHTML=seg;
+}
+function areaRender(){M.area_panel==='product'?areaProductRender():areaWorkRender();}
+function areaWorkRender(){
+  var c=el('m-content');
+  var list=DATA.people.filter(function(p){return M.area.a?((p.area||'기타')===M.area.a):true;});
+  if(M.area.u)list=list.filter(function(p){return p.u===M.area.u;});
+  if(!list.length){c.innerHTML=emptyHtml('해당 업무에 담당자가 없습니다','');return;}
+  var uChips='';
+  if(M.area.a){
+    var us=[];list=DATA.people.filter(function(p){return (p.area||'기타')===M.area.a;});
+    DATA.people.forEach(function(p){if((p.area||'기타')===M.area.a&&p.u&&us.indexOf(p.u)<0)us.push(p.u);});
+    if(M.area.u)list=list.filter(function(p){return p.u===M.area.u;});
+    if(us.length>1){
+      uChips='<div class="q-chips" style="justify-content:flex-start;margin:0 0 12px">'
+        +'<button class="q-chip'+(!M.area.u?'':'')+'" data-uclear="1" style="'+(!M.area.u?'border-color:var(--navy);color:var(--navy);background:var(--navy-50)':'')+'">전체</button>'
+        +us.map(function(u){return '<button class="q-chip" data-u="'+esc(u)+'" style="'+(M.area.u===u?'border-color:var(--navy);color:var(--navy);background:var(--navy-50)':'')+'">'+esc(u)+'</button>';}).join('')+'</div>';
+    }
+  }
+  var html='<div class="m-stat"><b>'+list.length+'</b>명</div>'+uChips;
+  if(M.area.a){
+    html+=soloBlock(M.area.a,list.length+'명',list.map(function(p){return personCardHtml(p,[]);}).join(''),'');
+    c.innerHTML=html;  }else{
+    var groups={};list.forEach(function(p){var a=p.area||'기타';(groups[a]=groups[a]||[]).push(p);});
+    areaOrder.forEach(function(a){if(!groups[a])return;
+      html+=mapSectionHtml(a,groups[a].length+'명',groups[a].map(function(p){return personCardHtml(p,[]);}).join(''));});
+    c.innerHTML=html;  }
+}
+function areaProductRender(){
+  var sel=M.area.prod||PRODUCTS[0].label;
+  var g=null;PRODUCTS.forEach(function(x){if(x.label===sel)g=x;});if(!g)g=PRODUCTS[0];
+  var ppl=g.emps.map(function(e){return empIdx[e];}).filter(Boolean);
+  var c=el('m-content');
+  c.innerHTML='<div class="m-stat">일반보험 상품군 · <b>'+ppl.length+'</b>명</div>'
+    +soloBlock(g.label,ppl.length+'명',ppl.map(function(p){return personCardHtml(p,[]);}).join(''),g.note);
+  }
+// 단일 카테고리 결과 — 다른 섹션과 동일하게 접이식(화살표 토글). 보이는 대로 접힌다.
+function soloBlock(title,cnt,cardsHtml,note){
+  return '<div class="map-section open"><button class="map-section-head" type="button">'
+    +'<span class="map-section-arrow">'+CHEV_DOWN+'</span>'
+    +'<span class="map-section-title">'+esc(title)+'</span>'
+    +'<span class="map-section-count">'+esc(cnt)+'</span></button>'
+    +'<div class="map-section-body">'+(note?'<div class="prod-note">'+esc(note)+'</div>':'')
+    +'<div class="person-grid">'+cardsHtml+'</div></div></div>';
+}
+function areaDrawer(){
+  if(M.area_panel==='product'){
+    var ph='<div class="d-cap"><span>일반보험 상품군</span><span>'+PRODUCTS.length+'</span></div>';
+    var psel=M.area.prod||PRODUCTS[0].label;
+    PRODUCTS.forEach(function(g){ph+='<button class="d-item'+(g.label===psel?' on':'')+'" data-prod="'+esc(g.label)+'"><span class="d-name">'+esc(g.label)+'</span><span class="d-cnt">'+g.emps.length+'</span></button>';});
+    return {title:'상품 보기',body:ph};
+  }
+  var h='<div class="d-cap"><span>업무 영역</span><span>'+DATA.people.length+'명</span></div>';
+  h+='<button class="d-item'+(!M.area.a?' on':'')+'" data-aall="1"><span class="d-name">전체 업무</span><span class="d-cnt">'+DATA.people.length+'</span></button>';
+  areaOrder.forEach(function(a){h+='<button class="d-item'+(M.area.a===a?' on':'')+'" data-area="'+esc(a)+'"><span class="d-name">'+esc(a)+'</span><span class="d-cnt">'+areaCnt[a]+'</span></button>';});
+  return {title:'업무 보기',body:h};
+}
+
+// ====================================================================
+// 뷰: 지역별 (전속/AM)
+// ====================================================================
+function regionPinKey(){return 'finder_region_pins_'+M.region_mode;}
+function regionOrdered(){var regs=regionList(M.region_mode);var pins=loadPins(regionPinKey()).filter(function(r){return regs.indexOf(r)>=0;});var rest=regs.filter(function(r){return pins.indexOf(r)<0;});return{pins:pins,all:pins.concat(rest)};}
+function regionSel(){var sel=M.region[M.region_mode];var o=regionOrdered();if(!sel||o.all.indexOf(sel)<0){sel=o.all[0];M.region[M.region_mode]=sel;}return sel;}
+function regionSub(){
+  var mode=M.region_mode;
+  var seg='<div class="m-seg"><button data-rmode="jsok" class="'+(mode==='jsok'?'on':'')+'">전속 지역단</button>'
+    +'<button data-rmode="am" class="'+(mode==='am'?'on':'')+'">AM 사업부</button></div>';
+  // 선택 지역은 콘텐츠 맵 제목으로 보이고, 지역 목록은 좌측 핸들로 연다 → 서브바는 전속/AM 토글만
+  el('m-sub').innerHTML=seg;
+}
+function regionRender(){
+  var mode=M.region_mode,sel=regionSel();
+  var c=el('m-content');
+  if(!sel){c.innerHTML=emptyHtml('지역 정보가 없습니다','');return;}
+  var ppl=peopleForRegion(sel),bos=bosangForRegion(sel,mode);
+  var html='';
+  if(ppl.length)html+=mapSectionHtml(sel,ppl.length+'명',ppl.map(function(p){return personCardHtml(p,[]);}).join(''),'person-grid');
+  else html+=emptyHtml(sel+' 담당자 정보가 없습니다','');
+  if(bos.length)html+=mapSectionHtml(sel+' 보상서포터즈',bos.length+'명',bos.map(function(x){return bsCatCard(x);}).join(''),'bs-grid');
+  c.innerHTML=html;}
+function regionDrawer(){
+  var mode=M.region_mode,sel=regionSel(),o=regionOrdered();
+  var pinSet={};o.pins.forEach(function(r){pinSet[r]=1;});
+  var cap=mode==='am'?'AM 사업부':'전속 지역단';
+  var h='<div class="d-cap"><span>'+cap+'</span><span>'+o.all.length+'개</span></div>';
+  function item(r){var on=pinSet[r];
+    return '<button class="d-item'+(r===sel?' on':'')+'" data-region="'+esc(r)+'"><span class="d-name">'+esc(r)+'</span><span class="d-cnt">'+peopleForRegion(r).length+'</span>'
+      +'<span class="d-pin'+(on?' on':'')+'" data-rpin="'+esc(r)+'" role="button" aria-label="고정">'+I.pin+'</span></button>';}
+  if(o.pins.length){h+='<div class="d-sec">'+I.pin+'<span>고정</span></div>'+o.pins.map(item).join('')+'<div class="d-divider"></div>';}
+  o.all.filter(function(r){return !pinSet[r];}).forEach(function(r){h+=item(r);});
+  return {title:cap,body:h};
+}
+
+// ====================================================================
+// 뷰: 보상서포터즈
+// ====================================================================
+var BS_PIN='finder_bosang_pins';
+function bosangData(){return DATA.bosang||[];}
+function bosangSel(){var d=bosangData();var sel=M.bosang.sel;var pins=loadPins(BS_PIN).filter(function(rn){return d.some(function(o){return o.region===rn;});});
+  if(!sel){sel=pins.length?pins[0]:(d.length?d[0].region:null);M.bosang.sel=sel;}return sel;}
+function bosangSub(){
+  bosangSel(); // 선택 지역 기본값 보정(콘텐츠 제목에 표시). 지역 목록은 좌측 핸들로 연다.
+  el('m-sub').innerHTML='<div class="m-search'+(M.bosang.q?' has-val':'')+'" id="m-bs-wrap" style="flex:1;min-width:0">'+I.search
+    +'<input id="m-bs-q" type="search" enterkeyhint="search" placeholder="지역·담당자·부서" autocomplete="off" spellcheck="false">'
+    +'<button class="m-search-clear" id="m-bs-clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>';
+  var qi=el('m-bs-q');qi.value=M.bosang.q||'';
+  setupSearchInput(qi,el('m-bs-clear'),function(){M.bosang.q=qi.value;el('m-bs-wrap').classList.toggle('has-val',!!qi.value);bosangRender();});
+}
+function bosangRender(){
+  var c=el('m-content'),q=normalizeQuery(M.bosang.q||'');
+  if(q){
+    var pq=parseQuery(q),order=[],byR={};
+    bosangData().forEach(function(o){o.cats.forEach(function(cc){
+      var hay=(o.region+' '+o.gubun+' '+cc.cat+' '+cc.dept+' '+cc.name).toLowerCase();
+      if(matches(hay,pq.expanded)){if(!byR[o.region]){byR[o.region]={gubun:o.gubun,items:[]};order.push(o.region);}byR[o.region].items.push(cc);}});});
+    if(!order.length){c.innerHTML=emptyHtml('검색 결과가 없습니다','');return;}
+    var html='';order.forEach(function(r){html+=mapSectionHtml(r,esc(BS_GLABEL[byR[r].gubun]||byR[r].gubun),byR[r].items.map(function(x){return bsCatCard(x);}).join(''),'bs-grid');});
+    c.innerHTML=html;bindMapSectionToggle(c);return;
+  }
+  var sel=bosangSel(),o=null;bosangData().forEach(function(x){if(x.region===sel)o=x;});
+  if(!o){c.innerHTML=emptyHtml('지역을 선택하세요','');return;}
+  c.innerHTML=mapSectionHtml(o.region,esc(BS_GLABEL[o.gubun]||o.gubun),o.cats.map(function(x){return bsCatCard(x);}).join(''),'bs-grid');
+  }
+function bosangDrawer(){
+  var d=bosangData(),sel=bosangSel();
+  var pins=loadPins(BS_PIN).filter(function(rn){return d.some(function(o){return o.region===rn;});});
+  var pinSet={};pins.forEach(function(r){pinSet[r]=1;});
+  var groups={};d.forEach(function(o){(groups[o.gubun]=groups[o.gubun]||[]).push(o);});
+  var h='<div class="d-cap"><span>보상서포터즈</span><span>'+d.length+'개 지역</span></div>';
+  function item(o){var on=pinSet[o.region];
+    return '<button class="d-item'+(o.region===sel?' on':'')+'" data-bsregion="'+esc(o.region)+'"><span class="d-name">'+esc(o.region)+'</span>'
+      +'<span class="d-pin'+(on?' on':'')+'" data-bspin="'+esc(o.region)+'" role="button" aria-label="고정">'+I.pin+'</span></button>';}
+  if(pins.length){var pobjs=pins.map(function(rn){var f=null;d.forEach(function(o){if(o.region===rn)f=o;});return f;}).filter(Boolean);
+    h+='<div class="d-sec">'+I.pin+'<span>고정</span></div>'+pobjs.map(item).join('')+'<div class="d-divider"></div>';}
+  BS_GORDER.forEach(function(g){var list=(groups[g]||[]).filter(function(o){return !pinSet[o.region];});if(!list.length)return;
+    var open=d.length&&((sel&&list.some(function(o){return o.region===sel;}))||(!pins.length&&g===BS_GORDER[0]));
+    h+='<div class="d-grp'+(open?' open':'')+'" data-grp="'+esc(g)+'"><button class="d-grp-hd" data-grptoggle="'+esc(g)+'"><span class="arr">'+I.chevR+'</span><span>'+esc(BS_GLABEL[g]||g)+'</span><span class="d-grp-cnt">'+list.length+'</span></button><div class="d-grp-body"><div class="d-grp-inner">';
+    list.forEach(function(o){h+=item(o);});h+='</div></div></div>';});
+  return {title:'보상서포터즈',body:h,after:syncDrawerAccordion};
+}
+
+// ====================================================================
+// 뷰: 현장소통담당
+// ====================================================================
+function fieldcomSub(){el('m-sub').innerHTML='';}
+function fieldcomRender(){
+  var html='<div class="m-notice">'+I.info+'<div class="m-notice-txt"><b>현업 담당자를 찾기 어려울 때</b>, 보종별 현장 소통 담당자에게 바로 문의하세요. 카드를 누르면 담당 업무로 이동합니다.</div></div>';
+  FC_BOARD.forEach(function(cat){
+    html+='<div class="fc-cat"><div class="fc-cat-head"><span class="ic" style="background:'+cat.bg+'">'+cat.icon+'</span>'
+      +'<span class="fc-cat-title">'+esc(cat.cat)+'</span><span class="fc-cat-cnt">'+cat.members.length+'</span></div>';
+    cat.members.forEach(function(m){
+      var p=fcIdx[m.n+'|'+m.d];var link=p&&p.area;
+      html+='<div class="fc-mem'+(link?' link':'')+'"'+(link?' data-fcjump="'+esc(p.empNo)+'" data-fcarea="'+esc(p.area)+'" data-fcu="'+esc(p.u||'')+'"':'')+'>'
+        +'<span class="fc-av" style="background:'+cat.bg+'">'+esc(m.n.charAt(0))+'</span>'
+        +'<span class="fc-mem-meta"><span class="fc-mem-name">'+esc(m.n)+'<span class="rk">'+esc(m.rk)+'</span></span><span class="fc-mem-dept">'+esc(m.d)+'</span></span>'
+        +(link?'<span class="fc-mem-go">'+I.chevR+'</span>':'')+'</div>';});
+    html+='</div>';
+  });
+  el('m-content').innerHTML=html;
+}
+
+// ====================================================================
+// 뷰: 즐겨찾기
+// ====================================================================
+function favoritesSub(){el('m-sub').innerHTML='';}
+function favoritesRender(){
+  var ppl=FAV.list().map(function(id){return empIdx[String(id)];}).filter(Boolean);
+  var c=el('m-content');
+  var notice='<div class="m-notice">'+I.info+'<div class="m-notice-txt"><b>즐겨찾기는 이 기기·브라우저에만 저장됩니다.</b> 다른 기기에서는 보이지 않으며 브라우저 데이터 삭제 시 초기화됩니다.</div></div>';
+  if(!ppl.length){c.innerHTML=notice+emptyHtml('즐겨찾기가 비어 있습니다','담당자 카드의 <b>★</b>를 누르면 여기에 모입니다');return;}
+  c.innerHTML=notice+'<div class="m-stat"><b>'+ppl.length+'</b>명</div><div class="person-grid">'+ppl.map(function(p){return personCardHtml(p,[]);}).join('')+'</div>';
+}
+
+// ── 뷰 레지스트리 ──
+var VIEWS={
+  search:{sub:searchSub,render:searchRender,drawer:null},
+  dept:{sub:deptSub,render:deptRender,drawer:deptDrawer},
+  area:{sub:areaSub,render:areaRender,drawer:areaDrawer},
+  region:{sub:regionSub,render:regionRender,drawer:regionDrawer},
+  bosang:{sub:bosangSub,render:bosangRender,drawer:bosangDrawer},
+  fieldcom:{sub:fieldcomSub,render:fieldcomRender,drawer:null},
+  favorites:{sub:favoritesSub,render:favoritesRender,drawer:null}
+};
+
+// ====================================================================
+// 드로어 / 시트
+// ====================================================================
+function syncDrawerAccordion(){
+  el('m-drawer-body').querySelectorAll('.d-grp').forEach(function(g){
+    var body=g.querySelector('.d-grp-body');if(body)body.style.maxHeight=g.classList.contains('open')?(body.scrollHeight+'px'):'0px';});
+}
+function openDrawer(){
+  var v=VIEWS[M.view];if(!v||!v.drawer)return;
+  var d=v.drawer();
+  el('m-drawer-title').textContent=d.title;
+  el('m-drawer-body').innerHTML=d.body;
+  el('m-drawer').classList.add('show');el('m-scrim').classList.add('show');
+  document.body.style.overflow='hidden';
+  if(d.after)d.after();
+}
+function closeDrawer(){el('m-drawer').classList.remove('show');if(!el('m-sheet').classList.contains('show')){el('m-scrim').classList.remove('show');document.body.style.overflow='';}}
+function openSheet(){
+  el('m-sheet-body').innerHTML=MORE.map(function(m){
+    return '<button class="sheet-item'+(M.view===m.id?' on':'')+'" data-more="'+m.id+'"><span class="si-ic">'+m.icon+'</span>'
+      +'<span class="si-tx"><span class="si-name">'+esc(m.label)+'</span><span class="si-desc">'+esc(m.desc)+'</span></span>'
+      +'<span class="si-go">'+I.chevR+'</span></button>';}).join('');
+  el('m-sheet').classList.add('show');el('m-scrim').classList.add('show');document.body.style.overflow='hidden';
+}
+function closeSheet(){el('m-sheet').classList.remove('show');if(!el('m-drawer').classList.contains('show')){el('m-scrim').classList.remove('show');document.body.style.overflow='';}}
+
+// ====================================================================
+// 이벤트 위임
+// ====================================================================
+el('m-nav').addEventListener('click',function(e){
+  var b=e.target.closest('[data-nav]');if(!b)return;var id=b.dataset.nav;
+  if(id==='more'){openSheet();return;}go(id);
+});
+el('m-sheet-body').addEventListener('click',function(e){var b=e.target.closest('[data-more]');if(!b)return;go(b.dataset.more);});
+el('m-scrim').addEventListener('click',function(){closeDrawer();closeSheet();});
+el('m-drawer-close').addEventListener('click',closeDrawer);
+el('m-edge').addEventListener('click',openDrawer);
+
+// 서브바(필터 버튼·세그먼트) 위임
+el('m-sub').addEventListener('click',function(e){
+  if(e.target.closest('#m-filter-btn')){openDrawer();return;}
+  var ap=e.target.closest('[data-apanel]');if(ap){M.area_panel=ap.dataset.apanel;M.area.u=null;areaSub();areaRender();updateEdge();window.scrollTo(0,0);return;}
+  var rm=e.target.closest('[data-rmode]');if(rm){M.region_mode=rm.dataset.rmode;regionSub();regionRender();updateEdge();window.scrollTo(0,0);return;}
+});
+
+// 드로어 본문 위임
+el('m-drawer-body').addEventListener('click',function(e){
+  // 그룹 아코디언
+  var gt=e.target.closest('[data-grptoggle]');
+  if(gt){var grp=gt.closest('.d-grp');grp.classList.toggle('open');syncDrawerAccordion();return;}
+  // 지역 핀(전속/AM)
+  var rp=e.target.closest('[data-rpin]');
+  if(rp){e.stopPropagation();var r=rp.dataset.rpin,key=regionPinKey(),pins=loadPins(key);var i=pins.indexOf(r);if(i>=0)pins.splice(i,1);else pins.unshift(r);savePins(key,pins);refreshDrawer();return;}
+  // 보상 핀
+  var bp=e.target.closest('[data-bspin]');
+  if(bp){e.stopPropagation();var r2=bp.dataset.bspin,pins2=loadPins(BS_PIN);var j=pins2.indexOf(r2);if(j>=0)pins2.splice(j,1);else pins2.unshift(r2);savePins(BS_PIN,pins2);refreshDrawer();return;}
+  // 선택 항목들
+  var it=e.target.closest('.d-item');if(!it)return;
+  if(it.dataset.dall){M.dept.grp=null;M.dept.d=null;applyDrawer();}
+  else if(it.dataset.dept){M.dept.d=it.dataset.dept;M.dept.grp=dept2grp[it.dataset.dept]||null;applyDrawer();}
+  else if(it.dataset.aall){M.area.a=null;M.area.u=null;applyDrawer();}
+  else if(it.dataset.area){M.area.a=it.dataset.area;M.area.u=null;applyDrawer();}
+  else if(it.dataset.prod){M.area.prod=it.dataset.prod;applyDrawer();}
+  else if(it.dataset.region){M.region[M.region_mode]=it.dataset.region;applyDrawer();}
+  else if(it.dataset.bsregion){M.bosang.sel=it.dataset.bsregion;M.bosang.q='';applyDrawer();}
+});
+function refreshDrawer(){var v=VIEWS[M.view];if(!v.drawer)return;var d=v.drawer();el('m-drawer-body').innerHTML=d.body;if(d.after)d.after();}
+function applyDrawer(){closeDrawer();VIEWS[M.view].sub();VIEWS[M.view].render();window.scrollTo(0,0);}
+
+// 본문 위임(카드 상호작용)
+el('m-content').addEventListener('click',function(e){
+  // 섹션 제목 펼치기/접기 (영속 요소에 한 번만 위임 — 렌더마다 리스너 누적 방지)
+  var sh=e.target.closest('.map-section-head');if(sh){sh.parentNode.classList.toggle('open');return;}
+  // 담당자 정보 펼치기/접기
+  var mt=e.target.closest('.mc-toggle');if(mt){var mc=mt.closest('.mc');var open=mc.classList.toggle('open');mt.setAttribute('aria-expanded',open?'true':'false');return;}
+  // 복사(레거시, 현재 미사용)
+  var cp=e.target.closest('[data-copy]');if(cp){copyText(cp.dataset.copy);return;}
+  // 즐겨찾기
+  var fav=e.target.closest('.pc-fav');if(fav){var id=fav.dataset.fav;var on=FAV.toggle(id);fav.classList.toggle('on',on);fav.setAttribute('aria-pressed',on?'true':'false');buildNav();
+    if(M.view==='favorites'&&!on){var card=fav.closest('.person-card');if(card){card.style.transition='opacity .2s';card.style.opacity='0';setTimeout(favoritesRender,200);}}
+    toast(on?'즐겨찾기 추가':'즐겨찾기 해제');return;}
+  // 업무분류 칩 → 업무별로 점프
+  var fn=e.target.closest('.pc-fn-link');if(fn){var a=fn.dataset.fnArea,u=fn.dataset.fnU;go('area');M.area_panel='work';M.area.a=a||null;M.area.u=u||null;areaSub();areaRender();window.scrollTo(0,0);return;}
+  // 대행자 점프
+  var jb=e.target.closest('.person-alt-jump');if(jb){jumpToEmp(jb.dataset.jumpEmp);return;}
+  // 검색 최근 칩
+  var hx=e.target.closest('[data-histx]');if(hx){e.stopPropagation();if(searchHistory.remove)searchHistory.remove(hx.dataset.histx);renderSearchIdle();return;}
+  var hc=e.target.closest('[data-hist]');if(hc){var q=hc.dataset.hist;M.search.q=q;var qi=el('m-q');if(qi)qi.value=q;runSearch(q);window.scrollTo(0,0);return;}
+  // 업무 u칩(업무별)
+  var uc=e.target.closest('[data-u]');if(uc){M.area.u=uc.dataset.u;areaRender();window.scrollTo({top:0});return;}
+  var ucl=e.target.closest('[data-uclear]');if(ucl){M.area.u=null;areaRender();window.scrollTo({top:0});return;}
+  // 현장소통담당 점프
+  var fc=e.target.closest('[data-fcjump]');if(fc){go('area');M.area_panel='work';M.area.a=fc.dataset.fcarea||null;M.area.u=null;areaSub();areaRender();
+    setTimeout(function(){var card=document.querySelector('#m-content .person-card[data-emp="'+fc.dataset.fcjump+'"]');if(card){card.scrollIntoView({behavior:'smooth',block:'center'});flashCard(card);}},90);return;}
+});
+
+// ── 시작 ──
+buildNav();
+go('search');
+</script>
+</body>
+</html>
